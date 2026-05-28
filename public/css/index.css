@@ -1,0 +1,533 @@
+/* Estilos del formulario */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #ffffff;
+  padding: 30px;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 20px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+::placeholder {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.flex-column > label {
+  color: #151717;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.inputForm {
+  border: 1.5px solid #ecedec;
+  border-radius: 10px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  transition: 0.2s ease-in-out;
+  background-color: white;
+}
+
+.input {
+  margin-left: 10px;
+  border-radius: 10px;
+  border: none;
+  width: 85%;
+  height: 100%;
+  background: transparent;
+  outline: none;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.inputForm:focus-within {
+  border: 1.5px solid #2d79f3;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.flex-row > div > label {
+  font-size: 14px;
+  color: black;
+  font-weight: 400;
+}
+
+.span {
+  font-size: 14px;
+  margin-left: 5px;
+  color: #2d79f3;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.button-submit-registrar {
+  margin: 20px 0 10px 0;
+  background-color: #008000;
+  border: none;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 10px;
+  height: 50px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.button-submit-ingresar {
+  margin: 20px 0 10px 0;
+  background-color: #2655ff;
+  border: none;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 10px;
+  height: 50px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.button-submit:hover {
+  background-color: #252727;
+}
+
+.p {
+  text-align: center;
+  color: black;
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.btn-google,
+.btn-apple {
+  margin-top: 10px;
+  width: 100%;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  gap: 10px;
+  border: 1px solid #ededef;
+  background-color: white;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.btn-google:hover,
+.btn-apple:hover {
+  border: 1px solid #2d79f3;
+}
+
+.line {
+  position: relative;
+  margin: 10px 0;
+}
+
+.line::before,
+.line::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 45%;
+  height: 1px;
+  background-color: #ecedec;
+}
+
+.line::before {
+  left: 0;
+}
+
+.line::after {
+  right: 0;
+}
+
+/* ======================================== */
+/* SIDEBAR - HAMBURGUESA (estilo propio)    */
+/* ======================================== */
+
+/* Overlay (fondo oscuro) */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+}
+
+.sidebar-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Sidebar (menú lateral derecho) */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 280px;
+  height: 100%;
+  background-color: white;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  justify-content: space-between;
+}
+
+.sidebar.active {
+  transform: translateX(0);
+}
+
+/* Header del sidebar */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sidebar-header h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.close-sidebar {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6b7280;
+  transition: color 0.2s;
+}
+
+.close-sidebar:hover {
+  color: #ef4444;
+}
+
+/* Navegación del sidebar */
+.sidebar-nav {
+  padding: 1.5rem;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: 1rem;
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #374151;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.sidebar-nav a:hover {
+  background-color: #f3f4f6;
+  color: #2655ff;
+}
+
+/* Botones dentro del sidebar */
+.sidebar-buttons {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sidebar-btn-registro {
+  background-color: #15803d;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  font-weight: 700;
+  transition: background-color 0.2s;
+  width: 150px;
+  text-align: center;
+}
+
+.sidebar-btn-registro:hover {
+  background-color: #166534;
+}
+
+.sidebar-btn-login {
+  background-color: #1d4ed8;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 150px;
+  text-align: center;
+}
+
+.sidebar-btn-login:hover {
+  background-color: #1e3a8a;
+}
+
+/* Botón hamburguesa personalizado */
+.hamburger-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ocultar botones de la barra superior en móvil/tablet */
+@media (max-width: 768px) {
+  .desktop-buttons {
+    display: none !important;
+  }
+}
+
+/* Asegurar que el sidebar-nav sea visible en desktop también */
+@media (min-width: 769px) {
+    .sidebar-nav {
+        display: block !important;
+    }
+    
+    .sidebar-nav ul {
+        display: block !important;
+    }
+    
+    .sidebar-nav li {
+        display: block !important;
+    }
+    
+    .sidebar-nav a {
+        display: block !important;
+    }
+}
+
+
+/* RESET COMPLETO de inputs - Soluciona el doble input de daisyUI */
+.inputForm input {
+  all: unset !important;
+  margin-left: 10px !important;
+  width: 85% !important;
+  height: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important;
+}
+
+.inputForm input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* También resetea el input checkbox */
+.flex-row input[type="checkbox"] {
+  all: unset !important;
+  width: 16px !important;
+  height: 16px !important;
+  border: 2px solid #d1d5db !important;
+  border-radius: 4px !important;
+  display: inline-block !important;
+  cursor: pointer !important;
+  margin-right: 5px !important;
+}
+
+.flex-row input[type="checkbox"]:checked {
+  background-color: #2655ff !important;
+  border-color: #2655ff !important;
+}
+
+
+/*IMAGEN DE FONDO*/
+/* Hero image - responsive y full width */
+.hero-image {
+  width: 100%;
+  min-height: 400px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Asegura que la imagen cubra bien en móvil */
+@media (max-width: 768px) {
+  .hero-image {
+    min-height: 300px;
+  }
+}
+
+/* Para tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero-image {
+    min-height: 450px;
+  }
+}
+
+/* Para desktop */
+@media (min-width: 1025px) {
+  .hero-image {
+    min-height: 500px;
+  }
+
+}
+
+/*TEXTO DE FUNIONES*/
+.texto-funciones h1{
+ margin-top: 30px;
+ font-weight: 700;
+ font-size: 35px;
+ text-align: center;
+}
+
+
+.texto-funciones p{
+  text-align: center;
+}
+/* Asegura que la imagen cubra bien en móvil */
+@media (max-width: 768px) {
+  .texto-funciones h1 {
+    font-size: 28px;
+  }
+  .texto-funciones p{
+  text-align: center;
+  font-size: 15px;
+}
+
+}
+
+    /* ========== ANIMACIONES PROFESIONALES ========== */
+    
+    /* Smooth scroll para toda la página */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Efecto fade-up (aparece desde abajo) */
+    .animate-fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .animate-fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Efecto fade-left (aparece desde izquierda) */
+    .animate-fade-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .animate-fade-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Efecto fade-right (aparece desde derecha) */
+    .animate-fade-right {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .animate-fade-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Efecto scale (aparece con zoom) */
+    .animate-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .animate-scale.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Retrasos para animaciones en cascada */
+    .delay-100 { transition-delay: 0.1s; }
+    .delay-200 { transition-delay: 0.2s; }
+    .delay-300 { transition-delay: 0.3s; }
+    .delay-400 { transition-delay: 0.4s; }
+    .delay-500 { transition-delay: 0.5s; }
+
+    /* Efecto hover para cards */
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Texto de funciones */
+    .texto-funciones {
+      text-align: center;
+      padding: 50px 20px 0 20px;
+    }
+    .texto-funciones h1 {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #1f2937;
+      margin-bottom: 1rem;
+    }
+    .texto-funciones p {
+      color: #6b7280;
+      font-size: 1.1rem;
+    }
+    @media (max-width: 640px) {
+      .texto-funciones h1 { font-size: 1.6rem; }
+      .texto-funciones p { font-size: 0.9rem; }
+    }
+
+  
+ 
+
+

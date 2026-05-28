@@ -1,0 +1,10 @@
+# Activamos el motor de reescritura de URLs
+RewriteEngine On
+
+# La raíz del proyecto ( / ) va directo al punto de entrada.
+RewriteRule ^$ app/index.php [L]
+
+# Si la petición es un archivo real, lo servimos directo.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ app/index.php?url=$1 [QSA,L]

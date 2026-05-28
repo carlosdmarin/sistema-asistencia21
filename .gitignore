@@ -1,0 +1,2 @@
+# Variable de entorno que no se debe subir al repositorio
+.env

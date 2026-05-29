@@ -28,7 +28,6 @@
       <!-- CAMPO PARA LECTOR (VISIBLE - PARA PROBAR) -->
 <div class="mb-4">
     <label class="text-gray-300 text-sm font-medium block mb-2">
-        <i class="fas fa-qrcode mr-2"></i>Escanear DNI / Código:
     </label>
     <input type="text" 
            id="lectorDni" 

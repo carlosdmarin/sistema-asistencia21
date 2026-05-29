@@ -30,7 +30,8 @@ class AsistenciaController extends Controller
         if (empty($dni)) {
             echo json_encode([
                 'ok' => false,
-                'mensaje' => 'DNI requerido']);
+                'mensaje' => 'DNI requerido'
+            ]);
             exit;
         }
         // aca buscamos al empleado en la DB 
@@ -112,7 +113,7 @@ class AsistenciaController extends Controller
             $empleado['hora_inicio'],
             $empleado['tolerancia_minutos'],
             $ahora
-            );
+        );
 
         // Registramos la entrada en la BASE DE DATOS con su estado
         $stmt = $this->pdo->prepare("
@@ -312,15 +313,17 @@ class AsistenciaController extends Controller
 
         $stmt = $this->pdo->prepare("
             SELECT 
-                e.id_empleado, e.nombre, e.apellido, e.dni,
-                c.nombre_cargo, t.nombre_turno,
-                a.hora_entrada, a.hora_salida, 
-                COALESCE(a.estado, 'sin_marcar') as estado
-            FROM EMPLEADO e 
-            INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
-            INNER JOIN TURNO t ON e.id_turno = t.id_turno 
-            LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado AND a.fecha = :hoy
-            ORDER BY e.apellido, e.nombre
+    e.id_empleado, e.nombre, e.apellido, e.dni,
+    c.nombre_cargo, t.nombre_turno,
+    a.hora_entrada, a.hora_salida, 
+    COALESCE(a.estado, 'sin_marcar') as estado,
+    CASE WHEN j.id_justificacion IS NOT NULL THEN 1 ELSE 0 END as justificado
+FROM EMPLEADO e 
+INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
+INNER JOIN TURNO t ON e.id_turno = t.id_turno 
+LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado AND a.fecha = :hoy
+LEFT JOIN JUSTIFICACION j ON a.id_asistencia = j.id_asistencia
+ORDER BY e.apellido, e.nombre
         ");
 
         $stmt->execute(['hoy' => $hoy]);
@@ -330,4 +333,98 @@ class AsistenciaController extends Controller
         echo json_encode($empleados);
         exit;
     }
+
+   public function justificar(): void
+{
+    if (!isset($_SESSION['usuario_id'])) {
+        echo json_encode(['ok' => false, 'mensaje' => 'No autorizado']);
+        exit;
+    }
+
+    $id_empleado = $_POST['id_empleado'] ?? 0;
+    $fecha = $_POST['fecha'] ?? date('Y-m-d');
+    $motivo = $_POST['motivo'] ?? '';
+
+    if (empty($motivo)) {
+        echo json_encode(['ok' => false, 'mensaje' => 'Motivo es obligatorio']);
+        exit;
+    }
+
+    // Buscar si existe la asistencia
+    $stmt = $this->pdo->prepare("SELECT id_asistencia FROM ASISTENCIA WHERE id_empleado = :id AND fecha = :fecha");
+    $stmt->execute(['id' => $id_empleado, 'fecha' => $fecha]);
+    $asistencia = $stmt->fetch();
+
+    // Si NO existe, la creamos automáticamente como 'falto'
+    if (!$asistencia) {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO ASISTENCIA (id_empleado, fecha, estado) 
+            VALUES (:id, :fecha, 'falto')
+        ");
+        $stmt->execute([
+            'id' => $id_empleado,
+            'fecha' => $fecha
+        ]);
+        
+        // Obtener el ID recién creado
+        $asistencia_id = $this->pdo->lastInsertId();
+    } else {
+        $asistencia_id = $asistencia['id_asistencia'];
+    }
+    
+    // Verificar si ya existe una justificación para esta asistencia
+    $stmt = $this->pdo->prepare("SELECT id_justificacion FROM JUSTIFICACION WHERE id_asistencia = :id");
+    $stmt->execute(['id' => $asistencia_id]);
+    
+    if ($stmt->fetch()) {
+        echo json_encode(['ok' => false, 'mensaje' => 'Esta asistencia ya está justificada']);
+        exit;
+    }
+    
+    // Insertar justificación
+    $stmt = $this->pdo->prepare("
+        INSERT INTO JUSTIFICACION (id_asistencia, motivo, justificado_por) 
+        VALUES (:id, :motivo, :user)
+    ");
+    $stmt->execute([
+        'id' => $asistencia_id,
+        'motivo' => $motivo,
+        'user' => $_SESSION['usuario_id']
+    ]);
+
+    echo json_encode(['ok' => true, 'mensaje' => 'Justificación guardada correctamente']);
+    exit;
+}
+
+    // Obtener justificación de una falta
+public function obtenerJustificacion(): void
+{
+    if (!isset($_SESSION['usuario_id'])) {
+        echo json_encode(['justificada' => false]);
+        exit;
+    }
+    
+    $id_empleado = $_GET['id_empleado'] ?? 0;
+    $fecha = $_GET['fecha'] ?? date('Y-m-d');
+    
+    $stmt = $this->pdo->prepare("
+        SELECT j.motivo, j.fecha_justificacion 
+        FROM JUSTIFICACION j
+        INNER JOIN ASISTENCIA a ON j.id_asistencia = a.id_asistencia
+        WHERE a.id_empleado = :id_empleado AND a.fecha = :fecha
+    ");
+    $stmt->execute(['id_empleado' => $id_empleado, 'fecha' => $fecha]);
+    $justificacion = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($justificacion) {
+        echo json_encode([
+            'justificada' => true,
+            'motivo' => $justificacion['motivo'],
+            'fecha_justificacion' => $justificacion['fecha_justificacion']
+        ]);
+    } else {
+        echo json_encode(['justificada' => false]);
+    }
+    exit;
+}
 }

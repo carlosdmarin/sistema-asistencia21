@@ -25,20 +25,25 @@
             </div>
         </div>
 
-        <!-- CAMPO PARA LECTOR -->
-        <input type="password" 
-               id="lectorDni" 
-               class="absolute opacity-0" 
-               style="top:0;left:0;width:1px;height:1px;"
-               autofocus 
-               autocomplete="off">
+      <!-- CAMPO PARA LECTOR (VISIBLE - PARA PROBAR) -->
+<div class="mb-4">
+    <label class="text-gray-300 text-sm font-medium block mb-2">
+        <i class="fas fa-qrcode mr-2"></i>Escanear DNI / Código:
+    </label>
+    <input type="text" 
+           id="lectorDni" 
+           class="w-full bg-gray-800 border border-gray-600 rounded-xl px-4 py-3 text-white text-center text-lg font-mono focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition-all"
+           placeholder="Acerque su DNI al lector"
+           autofocus 
+           autocomplete="off">
+</div>
 
-        <!-- MENSAJE DE ESPERA -->
-        <div class="text-center mb-6">
-            <p class="text-gray-500 text-sm font-medium">
-                <i class="far fa-hand-point-up mr-2"></i>Acerque su DNI al lector
-            </p>
-        </div>
+<!-- MENSAJE DE ESPERA (puedes quitarlo o mantenerlo) -->
+<div class="text-center mb-4">
+    <p class="text-gray-500 text-sm font-medium">
+        <i class="fas fa-hand-point-up mr-2"></i>Escanea tu código de barras o escribe el DNI manualmente
+    </p>
+</div>
 
         <!-- RESULTADO -->
         <div id="resultCard" class="hidden mb-6"></div>
@@ -69,5 +74,5 @@
     const BASE_URL = '<?php echo BASE_URL; ?>';
 </script>
 
-<!-- TU ARCHIVO JS EXTERNO -->
+<!-- JS EXTERNO -->
 <script src="<?php echo BASE_URL; ?>/public/js/lector.js"></script>

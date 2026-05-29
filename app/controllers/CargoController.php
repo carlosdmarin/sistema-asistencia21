@@ -88,5 +88,44 @@ class CargoController extends Controller
         'cargos' => $cargos
     ], 'dashboard');
 }
+     // METODO ELIMINAR
+    public function eliminar(int $id): void 
+    {
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL);
+            exit;
+        }
+        
+        // Verificar que el cargo existe
+        $stmt = $this->pdo->prepare("SELECT id_cargo FROM CARGO WHERE id_cargo = :id");
+        $stmt->execute(['id' => $id]);
+        
+        if (!$stmt->fetch()) {
+            $_SESSION['mensaje'] = 'Cargo no encontrado.';
+            $_SESSION['tipo'] = 'error';
+            header('Location: ' . BASE_URL . '/cargo/ver');
+            exit;
+        }
+        
+        // Verificar si hay empleados con este cargo
+        $stmt = $this->pdo->prepare("SELECT id_empleado FROM EMPLEADO WHERE id_cargo = :id LIMIT 1");
+        $stmt->execute(['id' => $id]);
+        
+        if ($stmt->fetch()) {
+            $_SESSION['mensaje'] = 'No puedes eliminar este cargo porque tiene empleados asociados.';
+            $_SESSION['tipo'] = 'error';
+            header('Location: ' . BASE_URL . '/cargo/ver');
+            exit;
+        }
+        
+        // Eliminar cargo
+        $stmt = $this->pdo->prepare("DELETE FROM CARGO WHERE id_cargo = :id");
+        $stmt->execute(['id' => $id]);
+        
+        $_SESSION['mensaje'] = 'Cargo eliminado correctamente.';
+        $_SESSION['tipo'] = 'success';
+        header('Location: ' . BASE_URL . '/cargo/ver');
+        exit;
+    }
     
 }

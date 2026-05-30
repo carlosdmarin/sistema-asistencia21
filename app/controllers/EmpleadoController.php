@@ -9,6 +9,7 @@ class EmpleadoController extends Controller
     {
         $this->pdo = Database::getConnection();
     }  
+
     // Medoto o funcion donde mostramos los cargos en el formulario
     public function registrar(): void 
     {
@@ -23,6 +24,7 @@ class EmpleadoController extends Controller
             'cargos' => $cargos
         ], 'dashboard');
     }
+
     // Metodo o funcion donde registramos los empleados
     public function guardar(): void 
     {
@@ -61,6 +63,7 @@ class EmpleadoController extends Controller
         }
         exit;
     }
+
     // Metodo o funcion donde mostramos a todos los empleados y tambien busqueda
     public function ver(): void{
 
@@ -87,6 +90,7 @@ class EmpleadoController extends Controller
             'busqueda' => $busqueda
         ], 'dashboard');
     }
+
     // Mostramos el formulario de editar
     public function editar(int $id): void 
     {
@@ -116,6 +120,7 @@ class EmpleadoController extends Controller
             'cargos' => $cargos
         ], 'dashboard');
     }
+
     // Procesamos la actualizacion de los empleados
     public function actualizar(): void 
     {
@@ -130,51 +135,29 @@ class EmpleadoController extends Controller
         }
         
         $id = $_POST['id_empleado'] ?? 0;
-        $nombre = $_POST['nombre'] ?? '';
-        $apellido = $_POST['apellido'] ?? '';
-        $dni = $_POST['dni'] ?? '';
-        $telefono = $_POST['telefono'] ?? '';
-        $id_cargo = $_POST['id_cargo'] ?? 0;
-        
-        // Validar
-        if (empty($nombre) || empty($apellido) || empty($dni)) {
-            $_SESSION['mensaje'] = 'Nombre, apellido y DNI son obligatorios.';
-            $_SESSION['tipo'] = 'error';
-            header('Location: ' . BASE_URL . '/empleado/editar/' . $id);
-            exit;
+        $datos = [
+        'nombre'    => $_POST['nombre'] ?? '',
+        'apellido'  => $_POST['apellido'] ?? '',
+        'dni'       => $_POST['dni'] ?? '',
+        'telefono'  => $_POST['telefono'] ?? '',
+        'id_cargo'  => $_POST['id_cargo'] ?? 0
+        ];
+
+        // Cargamos el modelo 
+        $this->loadModel('Empleado');
+        $resultado = $this->Empleado->actualizarEmpleado($id, $datos);
+
+        $_SESSION['mensaje'] = $resultado['mensaje'];
+        $_SESSION['tipo'] = $resultado['ok'] ? 'success' : 'error';
+
+        if($resultado['ok']){
+            header('Location: ' .BASE_URL. '/empleado/ver');
+        }else{
+            header('Location: ' .BASE_URL. '/empleado/editar' );
         }
-        
-        // Verificar DNI único (excepto el actual)
-        $stmt = $this->pdo->prepare("SELECT id_empleado FROM EMPLEADO WHERE dni = :dni AND id_empleado != :id LIMIT 1");
-        $stmt->execute(['dni' => $dni, 'id' => $id]);
-        if ($stmt->fetch()) {
-            $_SESSION['mensaje'] = 'Ya existe otro empleado con ese DNI.';
-            $_SESSION['tipo'] = 'error';
-            header('Location: ' . BASE_URL . '/empleado/editar/' . $id);
-            exit;
-        }
-        
-        // Actualizar
-        $stmt = $this->pdo->prepare("
-            UPDATE EMPLEADO 
-            SET nombre = :nombre, apellido = :apellido, dni = :dni, 
-                telefono = :telefono, id_cargo = :id_cargo 
-            WHERE id_empleado = :id
-        ");
-        $stmt->execute([
-            'nombre'    => $nombre,
-            'apellido'  => $apellido,
-            'dni'       => $dni,
-            'telefono'  => $telefono,
-            'id_cargo'  => $id_cargo,
-            'id'        => $id
-        ]);
-        
-        $_SESSION['mensaje'] = 'Empleado actualizado correctamente.';
-        $_SESSION['tipo'] = 'success';
-        header('Location: ' . BASE_URL . '/empleado/ver');
         exit;
     }
+
     // ELIMINAR EMPLEADO
     public function eliminar(int $id): void 
     {
@@ -183,26 +166,16 @@ class EmpleadoController extends Controller
             exit;
         }
         
-        // Verificar que existe
-        $stmt = $this->pdo->prepare("SELECT id_empleado FROM EMPLEADO WHERE id_empleado = :id");
-        $stmt->execute(['id' => $id]);
-        
-        if (!$stmt->fetch()) {
-            $_SESSION['mensaje'] = 'Empleado no encontrado.';
-            $_SESSION['tipo'] = 'error';
-            header('Location: ' . BASE_URL . '/empleado/ver');
-            exit;
-        }
-        
-        // Eliminar
-        $stmt = $this->pdo->prepare("DELETE FROM EMPLEADO WHERE id_empleado = :id");
-        $stmt->execute(['id' => $id]);
-        
-        $_SESSION['mensaje'] = 'Empleado eliminado correctamente.';
-        $_SESSION['tipo'] = 'success';
-        header('Location: ' . BASE_URL . '/empleado/ver');
+        $this->loadModel('Empleado');
+        $resultado = $this->Empleado->eliminarEmpleado($id);
+
+        $_SESSION['mensaje'] = $resultado['mensaje'];
+        $_SESSION['tipo'] = $resultado['ok'] ? 'success' : 'error';
+
+        header('Location: ' .BASE_URL. '/empleado/ver');
         exit;
     }
+
     // Registrar asis.,m nbtencia con lector de código de barras
     public function marcarAsistencia(): void
 {

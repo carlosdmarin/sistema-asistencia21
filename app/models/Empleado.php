@@ -104,5 +104,52 @@ class Empleado extends Model
         if(empty($datos['nombre']) || empty($datos['apellido']) || empty($datos['dni'])){
             return ['ok' => false, 'mensaje' => 'Nombre, apellido y DNI son obligatorios'];
         }
+
+        //  Verificamos si se escribio bien el DNI 
+        if(strlen($datos['dni']) !==8){
+            return ['ok' => false, 'mensaje' => 'El DNI debe tener 8 digitos'];
+        }
+        //  Verificamos DNI unico exepto el actual
+        $stmt = $this->pdo->prepare("SELECT id_empleado FROM EMPLEADO WHERE dni = :dni 
+        AND id_empleado != :id LIMIT 1");
+
+        $stmt->execute(['dni' => $datos['dni'], 'id' => $id]);
+        if($stmt->fetch()){
+            return ['ok' => false, 'mensaje' => 'Ya existe otro empleado con ese DNI.'];
+        }
+
+        // Actualizamos 
+        $stmt = $this->pdo->prepare("UPDATE EMPLEADO
+        SET nombre = :nombre, apellido = :apellido, dni = :dni, 
+        telefono = :telefono, id_cargo = :id_cargo
+        WHERE id_empleado = :id"
+       );
+
+       $stmt->execute([
+        'nombre'    => $datos['nombre'],
+        'apellido'  => $datos['apellido'],
+        'dni'       => $datos['dni'],
+        'telefono'  => $datos['telefono'],
+        'id_cargo'  => $datos['id_cargo'],
+        'id'        => $id
+       ]);
+
+       return ['ok' => true, 'mensaje' => 'Empleado Actualizado correctamente'];
+
+    }
+    public function eliminarEmpleado(int $id): array{
+        
+        // Vereficamos que existe 
+        $stmt = $this->pdo->prepare("SELECT id_empleado FROM EMPLEADO WHERE id_empleado = :id");
+        $stmt->execute(['id' => $id]);
+
+        if(!$stmt->fetch()){
+            return ['ok' => false, 'mensaje' => 'Empleado no encontrado'];
+        }
+
+        $stmt = $this->pdo->prepare("DELETE FROM EMPLEADO WHERE id_empleado = :id");
+        $stmt->execute(['id' => $id]);
+
+        return ['ok' => true,  'mensaje' => 'Empleado eliminado correctamente'];
     }
 }

@@ -9,7 +9,7 @@ class CargoController extends Controller
     {
         $this->pdo = Database::getConnection();
     }
-    
+    // Mostramos la vista de registrar cargo
     public function registrar(): void 
     {
         if (!isset($_SESSION['usuario_id'])) {
@@ -20,54 +20,34 @@ class CargoController extends Controller
         $this->view('cargo/registrar_cargo', [
         ], 'dashboard');
     }
+    // Procesamos le registrar el empleado
+    public function guardar(): void{
 
-     public function guardar(): void 
-    {
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: ' . BASE_URL);
             exit;
         }
-        
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . BASE_URL . '/cargo/registrar');
             exit;
         }
-        
-        $nombre   = $_POST['nombre'] ?? '';
-        
-        // Validar
-        if (empty($nombre)) {
-            $_SESSION['mensaje'] = 'Nombre del cargo es obligatorio.';
-            $_SESSION['tipo'] = 'error';
-            header('Location: ' . BASE_URL . '/cargo/registrar');
-            exit;
-        }
-        
-        // Verificar cargo único
-        $stmt = $this->pdo->prepare("SELECT id_cargo FROM CARGO WHERE nombre_cargo = :nombre LIMIT 1");
-        $stmt->execute(['nombre' => $nombre]);
-        if ($stmt->fetch()) {
-            $_SESSION['mensaje'] = 'Ya existe un cargo con ese nombre.';
-            $_SESSION['tipo'] = 'error';
-            header('Location: ' . BASE_URL . '/cargo/registrar');
-            exit;
-        }
-        
-        // Insertar
-        $stmt = $this->pdo->prepare("
-            INSERT INTO CARGO (nombre_cargo) 
-            VALUES (:nombre)
-        ");
-        $stmt->execute([
-            'nombre'    => $nombre
-        ]);
-        
-        $_SESSION['mensaje'] = 'Cargo registrado correctamente.';
-        $_SESSION['tipo'] = 'success';
-        header('Location: ' . BASE_URL . '/cargo/ver');
-        exit;
-    }
 
+        $nombre = $_POST['nombre'] ?? '';
+        // Usar el modelo
+        $this->loadModel('Cargo');
+        $resultado = $this->Cargo->registrarCargo($nombre);
+
+         $_SESSION['mensaje'] = $resultado['mensaje'];
+         $_SESSION['tipo'] = $resultado['ok'] ? 'success' : 'error';
+         if ($resultado['ok']) {
+            header('Location: ' . BASE_URL . '/cargo/ver');
+        } else {
+        header('Location: ' . BASE_URL . '/cargo/registrar');
+        }
+         exit;
+    }
+    // MOSTRAMOS TODOS LOS CARGOS EN LA TABLA DE LA VISTA
     public function ver(): void {
 
     if (!isset($_SESSION['usuario_id'])) {
@@ -75,20 +55,15 @@ class CargoController extends Controller
         exit;
     }
     
-    // Preparamos la consulta 
-    $stmt = $this->pdo->prepare("SELECT * FROM CARGO");
-    
-    // EJECUTAMOS LA CONSULTA 
-    $stmt->execute();
+    $this->loadModel('Cargo');
+    $cargos = $this->Cargo->obtenerTodos();
 
-    // Obtenemos los resultados 
-    $cargos = $stmt->fetchAll();
 
     $this->view('cargo/ver_cargo', [
         'cargos' => $cargos
     ], 'dashboard');
-}
-     // METODO ELIMINAR
+    }
+    // METODO ELIMINAR
     public function eliminar(int $id): void 
     {
         if (!isset($_SESSION['usuario_id'])) {
@@ -96,35 +71,61 @@ class CargoController extends Controller
             exit;
         }
         
-        // Verificar que el cargo existe
-        $stmt = $this->pdo->prepare("SELECT id_cargo FROM CARGO WHERE id_cargo = :id");
-        $stmt->execute(['id' => $id]);
-        
-        if (!$stmt->fetch()) {
-            $_SESSION['mensaje'] = 'Cargo no encontrado.';
+        // cargamos el modelo 
+        $this->loadModel('Cargo');
+        $resultado = $this->Cargo->eliminarCargo($id);
+
+        $_SESSION['mensaje'] = $resultado['mensaje'];
+        $_SESSION['tipo'] = $resultado['ok'] ? 'success' : 'error';
+
+        header('Location: ' .BASE_URL . '/cargo/ver');
+        exit;
+    }
+    // Mostramos el formulario de edicion 
+    public function editar(int $id): void{
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL);
+            exit;
+        }
+
+        $this->loadModel('Cargo');
+        $cargo = $this->Cargo->obtenerPorId($id);
+
+        if(!$cargo){
+            $_SESSION['mensaje'] = 'Cargo no encontrado';
             $_SESSION['tipo'] = 'error';
+            header('Location: ' .BASE_URL. '/cargo/ver');
+            exit;
+        }
+
+        $this->view('cargo/editar_cargo', [
+            'cargo' => $cargo
+        ], 'dashboard');
+
+    }
+    // Actualizamos el cargo 
+    public function actualizar():void{
+
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL);
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . BASE_URL . '/cargo/ver');
             exit;
         }
-        
-        // Verificar si hay empleados con este cargo
-        $stmt = $this->pdo->prepare("SELECT id_empleado FROM EMPLEADO WHERE id_cargo = :id LIMIT 1");
-        $stmt->execute(['id' => $id]);
-        
-        if ($stmt->fetch()) {
-            $_SESSION['mensaje'] = 'No puedes eliminar este cargo porque tiene empleados asociados.';
-            $_SESSION['tipo'] = 'error';
-            header('Location: ' . BASE_URL . '/cargo/ver');
-            exit;
-        }
-        
-        // Eliminar cargo
-        $stmt = $this->pdo->prepare("DELETE FROM CARGO WHERE id_cargo = :id");
-        $stmt->execute(['id' => $id]);
-        
-        $_SESSION['mensaje'] = 'Cargo eliminado correctamente.';
-        $_SESSION['tipo'] = 'success';
-        header('Location: ' . BASE_URL . '/cargo/ver');
+
+        $id = $_POST['id_cargo'] ?? 0;
+        $nombre = $_POST['nombre'] ?? '';
+
+        $this->loadModel('Cargo');
+        $resultado = $this->Cargo->actualizarCargo($id, $nombre);
+
+        $_SESSION['mensaje'] = $resultado['mensaje'];
+        $_SESSION['tipo'] = $resultado['ok'] ?  'success' : 'error';
+
+        header('Location: ' .BASE_URL. '/cargo/ver');
         exit;
     }
     

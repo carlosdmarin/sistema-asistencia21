@@ -38,7 +38,38 @@ class Empleado extends Model
         
         return ['ok' => true, 'mensaje' => 'Empleado registrado correctamente.'];
     }
-    
+    public function buscarEmpleados(string $busqueda = ''): array{
+        if(!empty($busqueda)){
+            $stmt = $this->pdo->prepare("
+            SELECT e.*, c.nombre_cargo, t.nombre_turno 
+            FROM EMPLEADO e 
+            INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
+            INNER JOIN TURNO t ON e.id_turno = t.id_turno 
+            WHERE e.nombre LIKE :b 
+               OR e.apellido LIKE :b2 
+               OR e.dni LIKE :b3 
+               OR e.telefono LIKE :b4
+               OR c.nombre_cargo LIKE :b5
+            ORDER BY e.apellido, e.nombre
+        ");
+        $stmt->execute([
+            'b'  => "%$busqueda%",
+            'b2' => "%$busqueda%",
+            'b3' => "%$busqueda%",
+            'b4' => "%$busqueda%",
+            'b5' => "%$busqueda%"
+        ]);
+       } else {
+        $stmt = $this->pdo->query("
+            SELECT e.*, c.nombre_cargo, t.nombre_turno 
+            FROM EMPLEADO e 
+            INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
+            INNER JOIN TURNO t ON e.id_turno = t.id_turno 
+            ORDER BY e.apellido, e.nombre
+        ");
+       }
+       return $stmt->fetchAll();
+    }
     public function obtenerTodos(): array 
     {
         $stmt = $this->pdo->query("
@@ -49,7 +80,6 @@ class Empleado extends Model
         ");
         return $stmt->fetchAll();
     }
-    
     public function obtenerPorId(int $id): ?array 
     {
         $stmt = $this->pdo->prepare("
@@ -62,11 +92,17 @@ class Empleado extends Model
         $stmt->execute(['id' => $id]);
         return $stmt->fetch() ?: null;
     }
-    // metodo 
     public function contarTodos(): int 
     {
         $stmt = $this->pdo->query("SELECT COUNT(*) as total FROM EMPLEADO");
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return (int) ($result['total'] ?? 0);
+    }
+    public function actualizarEmpleado(int $id, array $datos): array{
+
+        // Validaciones
+        if(empty($datos['nombre']) || empty($datos['apellido']) || empty($datos['dni'])){
+            return ['ok' => false, 'mensaje' => 'Nombre, apellido y DNI son obligatorios'];
+        }
     }
 }

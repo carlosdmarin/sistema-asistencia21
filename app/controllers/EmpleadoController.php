@@ -4,28 +4,26 @@
 class EmpleadoController extends Controller 
 {
     private $pdo;
-    
+
     public function __construct() 
     {
         $this->pdo = Database::getConnection();
-    }
-    
+    }  
+    // Medoto o funcion donde mostramos los cargos en el formulario
     public function registrar(): void 
     {
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: ' . BASE_URL);
             exit;
         }
-        
-        // Obtener cargos directo
-        $stmt = $this->pdo->query("SELECT * FROM CARGO ORDER BY nombre_cargo");
-        $cargos = $stmt->fetchAll();
+        $this->loadModel('Cargo');
+        $cargos = $this->Cargo->obtenerTodos();
         
         $this->view('empleado/registrar', [
             'cargos' => $cargos
         ], 'dashboard');
     }
-    
+    // Metodo o funcion donde registramos los empleados
     public function guardar(): void 
     {
         if (!isset($_SESSION['usuario_id'])) {
@@ -37,106 +35,59 @@ class EmpleadoController extends Controller
             header('Location: ' . BASE_URL . '/empleado/registrar');
             exit;
         }
+
+        // Preparar los datos
+        $datos = [
+            'nombre'    => $_POST['nombre'] ?? '',
+            'apellido'  => $_POST['apellido'] ?? '',
+            'dni'       => $_POST['dni'] ?? '',
+            'telefono'  => $_POST['telefono'] ?? '',
+            'id_cargo'  => $_POST['id_cargo'] ?? 0,
+            'id_turno'  => 1  // Turno por defecto
+        ];
+
         
-        $nombre   = $_POST['nombre'] ?? '';
-        $apellido = $_POST['apellido'] ?? '';
-        $dni      = $_POST['dni'] ?? '';
-        $telefono = $_POST['telefono'] ?? '';
-        $id_cargo = $_POST['id_cargo'] ?? 0;
+        // Usamos el modelo
+        $this->loadModel('Empleado');
+       $resultado = $this->Empleado->registrar($datos);
+
+        $_SESSION['mensaje'] = $resultado['mensaje'];
+        $_SESSION['tipo'] = $resultado['ok'] ? 'success' : 'error';
         
-        // Validar
-        if (empty($nombre) || empty($apellido) || empty($dni)) {
-            $_SESSION['mensaje'] = 'Nombre, apellido y DNI son obligatorios.';
-            $_SESSION['tipo'] = 'error';
-            header('Location: ' . BASE_URL . '/empleado/registrar');
-            exit;
-        }
-        
-        // Verificar DNI único
-        $stmt = $this->pdo->prepare("SELECT id_empleado FROM EMPLEADO WHERE dni = :dni LIMIT 1");
-        $stmt->execute(['dni' => $dni]);
-        if ($stmt->fetch()) {
-            $_SESSION['mensaje'] = 'Ya existe un empleado con ese DNI.';
-            $_SESSION['tipo'] = 'error';
-            header('Location: ' . BASE_URL . '/empleado/registrar');
-            exit;
-        }
-        
-        // Insertar
-        $stmt = $this->pdo->prepare("
-            INSERT INTO EMPLEADO (nombre, apellido, dni, telefono, id_cargo, id_turno) 
-            VALUES (:nombre, :apellido, :dni, :telefono, :id_cargo, 1)
-        ");
-        $stmt->execute([
-            'nombre'    => $nombre,
-            'apellido'  => $apellido,
-            'dni'       => $dni,
-            'telefono'  => $telefono,
-            'id_cargo'  => $id_cargo
-        ]);
-        
-        $_SESSION['mensaje'] = 'Empleado registrado correctamente.';
-        $_SESSION['tipo'] = 'success';
+        if ($resultado['ok']) {
         header('Location: ' . BASE_URL . '/empleado/ver');
+        } else {
+        header('Location: ' . BASE_URL . '/empleado/registrar');
+        }
         exit;
     }
-    
-   public function ver(): void 
-{
-    if (!isset($_SESSION['usuario_id'])) {
+    // Metodo o funcion donde mostramos a todos los empleados y tambien busqueda
+    public function ver(): void{
+
+        if (!isset($_SESSION['usuario_id'])) {
         header('Location: ' . BASE_URL);
         exit;
-    }
-    
-    $busqueda = $_GET['buscar'] ?? '';
-    
-    if (!empty($busqueda)) {
-        $stmt = $this->pdo->prepare("
-            SELECT e.*, c.nombre_cargo, t.nombre_turno 
-            FROM EMPLEADO e 
-            INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
-            INNER JOIN TURNO t ON e.id_turno = t.id_turno 
-            WHERE e.nombre LIKE :b 
-               OR e.apellido LIKE :b2 
-               OR e.dni LIKE :b3 
-               OR e.telefono LIKE :b4
-               OR c.nombre_cargo LIKE :b5
-            ORDER BY e.apellido, e.nombre
-        ");
-        $stmt->execute([
-            'b'  => "%$busqueda%",
-            'b2' => "%$busqueda%",
-            'b3' => "%$busqueda%",
-            'b4' => "%$busqueda%",
-            'b5' => "%$busqueda%"
-        ]);
-    } else {
-        $stmt = $this->pdo->query("
-            SELECT e.*, c.nombre_cargo, t.nombre_turno 
-            FROM EMPLEADO e 
-            INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
-            INNER JOIN TURNO t ON e.id_turno = t.id_turno 
-            ORDER BY e.apellido, e.nombre
-        ");
-    }
-    
-    $empleados = $stmt->fetchAll();
-    
-    // Si es AJAX, devolver JSON
-    if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
-        header('Content-Type: application/json');
-        echo json_encode($empleados);
-        exit;
-    }
-    
-    $this->view('empleado/ver_empleado', [
-        'empleados' => $empleados,
-        'busqueda' => $busqueda
-    ], 'dashboard');
-}
+        }
+        $busqueda = $_GET['buscar'] ?? '';
 
-      
-    // MOSTRAR FORMULARIO DE EDICIÓN
+        // usamos el modelo 
+        $this->loadModel('Empleado');
+        $empleados = $this->Empleado->buscarEmpleados($busqueda);
+
+        // Si es AJAX devolvemos json
+        if(isset($_GET['ajax']) && $_GET['ajax'] == '1'){
+            header('Content-Type: application/json');
+            echo json_encode($empleados);
+            exit;
+        }
+
+        // Mostramos la vista de los empleados 
+        $this->view('empleado/ver_empleado', [
+            'empleados' => $empleados,
+            'busqueda' => $busqueda
+        ], 'dashboard');
+    }
+    // Mostramos el formulario de editar
     public function editar(int $id): void 
     {
         if (!isset($_SESSION['usuario_id'])) {
@@ -165,8 +116,7 @@ class EmpleadoController extends Controller
             'cargos' => $cargos
         ], 'dashboard');
     }
-    
-    // PROCESAR ACTUALIZACIÓN
+    // Procesamos la actualizacion de los empleados
     public function actualizar(): void 
     {
         if (!isset($_SESSION['usuario_id'])) {
@@ -225,7 +175,6 @@ class EmpleadoController extends Controller
         header('Location: ' . BASE_URL . '/empleado/ver');
         exit;
     }
-    
     // ELIMINAR EMPLEADO
     public function eliminar(int $id): void 
     {
@@ -254,9 +203,8 @@ class EmpleadoController extends Controller
         header('Location: ' . BASE_URL . '/empleado/ver');
         exit;
     }
-
-    // Registrar asis     .,m nbtencia con lector de código de barras
-public function marcarAsistencia(): void
+    // Registrar asis.,m nbtencia con lector de código de barras
+    public function marcarAsistencia(): void
 {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         echo json_encode(['ok' => false, 'mensaje' => 'Método no permitido']);
@@ -383,10 +331,9 @@ public function marcarAsistencia(): void
         'tipo' => 'exito'
     ]);
     exit;
-}
-
-// Ver últimas asistencias (para AJAX)
-public function ultimas(): void
+    }
+    // Ver últimas asistencias (para AJAX)
+    public function ultimas(): void
 {
     $stmt = $this->pdo->query("
         SELECT a.*, e.nombre, e.apellido, c.nombre_cargo 
@@ -414,7 +361,7 @@ public function ultimas(): void
         echo '</div>';
     }
     exit;
-}
+    }
 
 
 }

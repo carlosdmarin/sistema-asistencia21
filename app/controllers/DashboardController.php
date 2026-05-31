@@ -1,8 +1,8 @@
 <?php
 // app/controllers/DashboardController.php
 
-class DashboardController extends Controller 
-{
+class DashboardController extends Controller {
+
     public function index(): void 
     {
         if (!isset($_SESSION['usuario_id'])) {
@@ -12,19 +12,19 @@ class DashboardController extends Controller
         
         // Instanciar modelos
         require_once __DIR__ . '/../models/Empleado.php';
-        require_once __DIR__ . '/../models/Asistencia.php';
+        require_once __DIR__ . '/../models/Dashboard.php';
         
         $empleadoModel = new Empleado();
-        $asistenciaModel = new Asistencia();
+        $dashboardModel = new Dashboard();
         
         // Obtener datos
         $totalEmpleados = $empleadoModel->contarTodos();
-        $asistenciasHoy = $asistenciaModel->contarAsistenciasHoy();
-        $ausentesHoy = $asistenciaModel->contarAusentesHoy();
-        $tardanzasHoy = $asistenciaModel->contarTardanzasHoy();
-        $porcentajeAsistencia = $asistenciaModel->calcularPorcentajeAsistenciaHoy();
-        $asistenciasPorSemana = $asistenciaModel->obtenerAsistenciasPorSemana();
-        $ultimosRegistros = $asistenciaModel->obtenerUltimosRegistros(5);
+        $asistenciasHoy = $dashboardModel->contarAsistenciasHoy();
+        $ausentesHoy = $dashboardModel->contarAusentesHoy();
+        $tardanzasHoy = $dashboardModel->contarTardanzasHoy();
+        $porcentajeAsistencia = $dashboardModel->calcularPorcentajeAsistenciaHoy();
+        $asistenciasPorSemana = $dashboardModel->obtenerAsistenciasPorSemana();
+        $ultimosRegistros = $dashboardModel->obtenerUltimosRegistros(5);
         
         // Pasar datos a la vista
         $this->view('dashboard/index', [
@@ -47,19 +47,19 @@ class DashboardController extends Controller
         }
 
         require_once __DIR__ . '/../models/Empleado.php';
-        require_once __DIR__ . '/../models/Asistencia.php';
+        require_once __DIR__ . '/../models/Dashboard.php';
 
         $empleadoModel = new Empleado();
-        $asistenciaModel = new Asistencia();
+        $dashboardModel = new Dashboard();
 
         $data = [
             'totalEmpleados' => $empleadoModel->contarTodos(),
-            'asistenciasHoy' => $asistenciaModel->contarAsistenciasHoy(),
-            'ausentesHoy' => $asistenciaModel->contarAusentesHoy(),
-            'tardanzasHoy' => $asistenciaModel->contarTardanzasHoy(),
-            'porcentajeAsistencia' => $asistenciaModel->calcularPorcentajeAsistenciaHoy(),
-            'asistenciasPorSemana' => $asistenciaModel->obtenerAsistenciasPorSemana(),
-            'ultimosRegistros' => $asistenciaModel->obtenerUltimosRegistros(5)
+            'asistenciasHoy' => $dashboardModel->contarAsistenciasHoy(),
+            'ausentesHoy' => $dashboardModel->contarAusentesHoy(),
+            'tardanzasHoy' => $dashboardModel->contarTardanzasHoy(),
+            'porcentajeAsistencia' => $dashboardModel->calcularPorcentajeAsistenciaHoy(),
+            'asistenciasPorSemana' => $dashboardModel->obtenerAsistenciasPorSemana(),
+            'ultimosRegistros' => $dashboardModel->obtenerUltimosRegistros(5)
         ];
 
         header('Content-type: application/json');

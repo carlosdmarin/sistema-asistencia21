@@ -22,7 +22,6 @@ class UsuarioController extends Controller
             'usuarios' => $usuarios
         ], 'dashboard');
     }
-
     // Eliminar usuario 
     public function eliminar(int $id): void{
         if(!isset($_SESSION['usuario_id'])){
@@ -58,7 +57,7 @@ class UsuarioController extends Controller
         $this->view('auth/registrar_usuario', [] , 'dashboard');
     }
     // Procesar el registro de usuario (guardar en BD)
-public function guardar(): void 
+    public function guardar(): void 
 {
     if (!isset($_SESSION['usuario_id'])) {
         header('Location: ' . BASE_URL . '/login');
@@ -93,6 +92,6 @@ public function guardar(): void
         header('Location: ' . BASE_URL . '/usuario/registrar');
     }
     exit;
-}
+    }
 
 }

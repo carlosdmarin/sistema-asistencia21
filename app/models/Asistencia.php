@@ -1,110 +1,254 @@
 <?php
 // app/models/Asistencia.php
 
-class Asistencia extends Model 
-{
-    // Contar asistencias de hoy (asistio + tardanza)
-    public function contarAsistenciasHoy(): int 
-    {
-        $fecha = date('Y-m-d');
-        $sql = "SELECT COUNT(*) as total FROM ASISTENCIA 
-                WHERE fecha = :fecha AND estado IN ('asistio', 'tardanza')";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':fecha' => $fecha]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return (int) ($result['total'] ?? 0);
+class Asistencia extends Model {
+
+    // Buscar empleado por DNI (con sus datos de cargo y turno)
+    public function buscarEmpleadoPorDni(string $dni): ?array{
+        $stmt = $this->pdo->prepare("
+            SELECT e.*, c.nombre_cargo,
+                t.nombre_turno,
+                t.hora_inicio,
+                t.hora_salida,
+                t.tolerancia_minutos
+            FROM EMPLEADO e 
+            INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
+            INNER JOIN TURNO t ON e.id_turno = t.id_turno 
+            WHERE e.dni = :dni 
+            LIMIT 1
+        ");
+        $stmt->execute(['dni' => $dni]);
+        return $stmt->fetch() ?: null;
     }
-    
-    // Contar ausentes de hoy (empleados que no han registrado asistencia)
-    public function contarAusentesHoy(): int 
-    {
-        $empleadoModel = new Empleado();
-        $totalEmpleados = $empleadoModel->contarTodos();
-        $asistieron = $this->contarAsistenciasHoy();
-        return $totalEmpleados - $asistieron;
+
+    // Buscar asistencias del dia para un empleado
+    public function buscarAsistenciaHoy(int $idEmpleado ,string $fecha): ?array{
+
+        $stmt = $this->pdo->prepare("
+        SELECT * FROM ASISTENCIA 
+        WHERE id_empleado = :id AND fecha = :fecha 
+        LIMIT 1
+        ");
+        $stmt->execute(['id' => $idEmpleado, 'fecha' => $fecha]);
+        return $stmt->fetch() ?: null;
     }
-    
-    // Contar tardanzas de hoy
-    public function contarTardanzasHoy(): int 
-    {
-        $fecha = date('Y-m-d');
-        $sql = "SELECT COUNT(*) as total FROM ASISTENCIA 
-                WHERE fecha = :fecha AND estado = 'tardanza'";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':fecha' => $fecha]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return (int) ($result['total'] ?? 0);
+
+    // Registrar entrada
+    public function registrarEntrada(int $idEmpleado, string $fecha, string $hora, string $estado): int {
+        
+        $stmt = $this->pdo->prepare("
+        INSERT INTO (id_empleado, fecha, hora_entrada, estado)
+        VALUES(:id, :fecha, :hora, :estado)
+        ");
+
+        $stmt->execute([
+            'id' => $idEmpleado,
+            'fecha' => $fecha,
+            'hora' => $hora,
+            'estado' => $estado
+        ]);
+        return (int) $this->pdo->lastInsertId();
     }
-    
-    // Calcular porcentaje de asistencia hoy
-    public function calcularPorcentajeAsistenciaHoy(): int 
-    {
-        $empleadoModel = new Empleado();
-        $totalEmpleados = $empleadoModel->contarTodos();
-        $asistieron = $this->contarAsistenciasHoy();
+
+    // Registrar salida 
+    public function registrarSalida(int $idAsistencia, string $hora): bool{
         
-        if ($totalEmpleados == 0) {
-            return 0;
-        }
-        
-        return (int) round(($asistieron / $totalEmpleados) * 100);
+        $stmt = $this->pdo->prepare("
+        UPDATE ASISTENCIA 
+        SET hora_salida = :hora
+        WHERE id_asistencia = :id
+        ");
+        return $stmt->execute(['hora' =>$hora, 'id' =>$idAsistencia]);
     }
-    
-    // Obtener asistencias por semana (últimos 7 días)
-    public function obtenerAsistenciasPorSemana(): array 
-    {
-        $asistencias = [];
-        
-        // Obtener fecha del lunes de esta semana
-        $lunes = date('Y-m-d', strtotime('monday this week'));
-        
-        for ($i = 0; $i < 6; $i++) {
-            $fecha = date('Y-m-d', strtotime($lunes . ' +' . $i . ' days'));
-            
-            $sql = "SELECT COUNT(*) as total FROM ASISTENCIA 
-                    WHERE fecha = :fecha AND estado IN ('asistio', 'tardanza')";
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([':fecha' => $fecha]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            $asistencias[] = (int) ($result['total'] ?? 0);
-        }
-        
-        return $asistencias;
+
+    // Determinar estado (asistio o tardanza)
+    public function determinarEstado(string $horaInicio, int $toleranciaMinutos, string $horaLlegada): string{
+
+        $horaLimite = date('H:i:s', strtotime($horaInicio . ' + ' . $toleranciaMinutos . 'minutes' ));
+        return $horaLlegada <= $horaLimite ? 'asistio' : 'tardanza';
     }
-    
-    // Obtener últimos registros de asistencia
-    public function obtenerUltimosRegistros(int $limite = 5): array 
-    {
-        $sql = "SELECT a.*, e.nombre, e.apellido 
-                FROM ASISTENCIA a
-                JOIN EMPLEADO e ON a.id_empleado = e.id_empleado
-                ORDER BY a.fecha DESC, a.hora_entrada DESC
-                LIMIT :limite";
-        
-        $stmt = $this->pdo->prepare($sql);
+
+    // Obtener las 10 ultimas asistencias
+    public function obtenerUltimasAsistencias(int $limite =10): array{
+
+        $hoy = date('Y-m-d');
+        $stmt = $this->pdo->prepare("
+        SELECT a.*, e.nombre, e.apellido, c.nombre_cargo
+        FROM ASISTENCIA a
+        INNER JOIN EMPLEADO e ON a.id_empleado = e.id_empleado
+        INNER JOIN CARGO c ON e.id_cargo = c.id_cargo
+        WHERE a.fecha = :hoy
+        ORDER BY a.id_asistencia DESC
+        LIMIT :limite
+        ");
+
+        $stmt->bindParam(':hoy', $hoy);
         $stmt->bindParam(':limite', $limite, PDO::PARAM_INT);
         $stmt->execute();
+        return $stmt->fetchAll();
+    } 
+
+    // Obtener todos los empleados con su asistencia de hoy 
+    public function obtenerEmpleadosConAsistenciaHoy(string $fecha): array{
         
-        $registros = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            // Convertir estado a español para mostrar
-            $estado = match($row['estado']) {
-                'asistio' => 'Presente',
-                'tardanza' => 'Tardanza',
-                'falto' => 'Ausente',
-                default => ucfirst($row['estado'])
-            };
-            
-            $registros[] = [
-                'empleado' => $row['nombre'] . ' ' . $row['apellido'],
-                'empleado_nombre' => $row['nombre'] . ' ' . $row['apellido'],
-                'fecha' => $row['fecha'],
-                'hora' => date('h:i A', strtotime($row['hora_entrada'])),
-                'estado' => $estado
+        $stmt = $this->pdo->prepare("
+        SELECT 
+                e.id_empleado, e.nombre, e.apellido, e.dni, e.telefono,
+                c.nombre_cargo, t.nombre_turno,
+                a.id_asistencia, a.hora_entrada, a.hora_salida, a.estado, a.fecha
+            FROM EMPLEADO e 
+            INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
+            INNER JOIN TURNO t ON e.id_turno = t.id_turno 
+            LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado AND a.fecha = :fecha
+            ORDER BY e.apellido, e.nombre
+        ");
+
+        $stmt->execute(['fecha' => $fecha]);
+        return $stmt->fetchAll();
+    }
+
+    // Obtener empleados con asistencia y justificacion para ajax 
+    public function obtenerDatosAsistencia(string $fecha): array {
+
+        $stmt = $this->pdo->prepare("
+        SELECT 
+                e.id_empleado, e.nombre, e.apellido, e.dni,
+                c.nombre_cargo, t.nombre_turno,
+                a.hora_entrada, a.hora_salida, 
+                COALESCE(a.estado, 'sin_marcar') as estado,
+                CASE WHEN j.id_justificacion IS NOT NULL THEN 1 ELSE 0 END as justificado
+            FROM EMPLEADO e 
+            INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
+            INNER JOIN TURNO t ON e.id_turno = t.id_turno 
+            LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado AND a.fecha = :fecha
+            LEFT JOIN JUSTIFICACION j ON a.id_asistencia = j.id_asistencia
+            ORDER BY e.apellido, e.nombre
+        ");
+
+        $stmt->execute(['fecha' => $fecha]);
+        return $stmt->fetchAll();
+    }
+
+    // Marcar falta a los empleados sin registro
+    public function marcarFaltasAutomaticas(string $fecha): int{
+
+        $stmt = $this->pdo->prepare("
+        SELECT e.id_empleado 
+            FROM EMPLEADO e 
+            WHERE e.id_empleado NOT IN (
+                SELECT id_empleado FROM ASISTENCIA WHERE fecha = :fecha
+            )
+        ");
+
+        $stmt->execute(['fecha' => $fecha]);
+        $faltantes = $stmt->fetchAll();
+
+        $contador = 0;
+        foreach ($faltantes as $emp) {
+            $check = $this->pdo->prepare("SELECT 1 FROM ASISTENCIA WHERE id_empleado = :id AND fecha = :fecha");
+            $check->execute(['id' => $emp['id_empleado'], 'fecha' => $fecha]);
+            if (!$check->fetch()) {
+                $insert = $this->pdo->prepare("
+                    INSERT INTO ASISTENCIA (id_empleado, fecha, hora_entrada, estado) 
+                    VALUES (:id, :fecha, NULL, 'falto')
+                ");
+                $insert->execute(['id' => $emp['id_empleado'], 'fecha' => $fecha]);
+                $contador++;
+            }
+        }
+        return $contador;
+    }
+
+    // Marcar salidas automaticamentes para los que olvidaron marcar salida 
+    public function marcarSalidasAutomaticas(string $fecha): int {
+
+        $stmt = $this->pdo->prepare("
+        UPDATE ASISTENCIA a
+            INNER JOIN EMPLEADO e ON a.id_empleado = e.id_empleado
+            INNER JOIN TURNO t ON e.id_turno = t.id_turno
+            SET a.hora_salida = t.hora_salida
+            WHERE a.fecha = :fecha 
+              AND a.hora_entrada IS NOT NULL 
+              AND a.hora_salida IS NULL
+              AND a.estado IN ('asistio', 'tardanza')
+        ");
+        $stmt->execute(['fecha' =>$fecha]);
+        return $stmt->rowCount();
+    }
+
+    // Justificar una falta 
+    public function justificarFalta(int $idEmpleado, string $fecha, string $motivo, int $idUsuario): array{
+
+        // buscar si existe una asistencia
+        $stmt = $this->pdo->prepare("
+        SELECT id_asistencia FROM ASISTENCIA WHERE id_empleado = :id AND fecha = :fecha
+        ");
+
+        $stmt->execute(['id' => $idEmpleado, 'fecha' => $fecha]);
+        $asistencia = $stmt->fetch();
+
+        // Si no existe lo ponemos como 'falto'
+        if(!$asistencia){
+            $stmt = $this->pdo->prepare("
+            INSERT INTO ASISTENCIA (id_empleado, fecha, estado)
+            VALUES (:id, :fecha, 'falto')
+            ");
+            $stmt->execute(['id' => $idEmpleado, 'fecha' => $fecha]);
+            $asistencia_id = $this->pdo->lastInsertId();
+        }else{
+            $asistencia_id = $asistencia['id_asistencia'];
+        }
+
+        // Verificar si ya existe una justificación
+        $stmt = $this->pdo->prepare("SELECT id_justificacion FROM JUSTIFICACION WHERE id_asistencia = :id");
+        $stmt->execute(['id' => $asistencia_id]);
+        
+        if ($stmt->fetch()) {
+            return ['ok' => false, 'mensaje' => 'Esta asistencia ya está justificada'];
+        }
+        
+        // Insertar justificación
+        $stmt = $this->pdo->prepare("
+            INSERT INTO JUSTIFICACION (id_asistencia, motivo, justificado_por) 
+            VALUES (:id, :motivo, :user)
+        ");
+        $stmt->execute([
+            'id' => $asistencia_id,
+            'motivo' => $motivo,
+            'user' => $idUsuario
+        ]);
+        
+        return ['ok' => true, 'mensaje' => 'Justificación guardada correctamente'];
+    }
+
+     // Obtener justificación de una falta
+    public function obtenerJustificacion(int $idEmpleado, string $fecha): array 
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT j.motivo, j.fecha_justificacion 
+            FROM JUSTIFICACION j
+            INNER JOIN ASISTENCIA a ON j.id_asistencia = a.id_asistencia
+            WHERE a.id_empleado = :id_empleado AND a.fecha = :fecha
+        ");
+        $stmt->execute(['id_empleado' => $idEmpleado, 'fecha' => $fecha]);
+        $justificacion = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($justificacion) {
+            return [
+                'justificada' => true,
+                'motivo' => $justificacion['motivo'],
+                'fecha_justificacion' => $justificacion['fecha_justificacion']
             ];
         }
         
-        return $registros;
+        return ['justificada' => false];
     }
+
+
+
+
+
+
+
+    
 }

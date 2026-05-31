@@ -5,7 +5,16 @@
             <i class="fas fa-plus"></i> Nuevo Usuario
         </a>
     </div>
-    
+        <?php if (isset($_SESSION['mensaje'])): ?>
+        <div class="alert alert-<?php echo $_SESSION['tipo'] === 'success' ? 'success' : 'error'; ?>">
+            <i class="fas fa-<?php echo $_SESSION['tipo'] === 'success' ? 'check-circle' : 'exclamation-circle'; ?>"></i>
+            <?php 
+                echo $_SESSION['mensaje']; 
+                unset($_SESSION['mensaje']);
+                unset($_SESSION['tipo']);
+            ?>
+        </div>
+    <?php endif; ?>
     
     <div class="table-wrapper">
         <table class="table-responsive-table">

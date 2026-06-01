@@ -2,6 +2,7 @@
 class HistorialController extends Controller 
 {
     private $pdo;
+    public $Historial;
     
     public function __construct() 
     {

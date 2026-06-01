@@ -1,9 +1,11 @@
 <?php
 // app/controllers/EmpleadoController.php
 
-class CargoController extends Controller 
-{
+class CargoController extends Controller {
+
     private $pdo;
+    public $Cargo;
+
     
     public function __construct() 
     {

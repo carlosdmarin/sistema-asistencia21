@@ -4,6 +4,8 @@
 class EmpleadoController extends Controller 
 {
     private $pdo;
+    public $Cargo;
+    public $Empleado;
 
     public function __construct() 
     {
@@ -11,8 +13,8 @@ class EmpleadoController extends Controller
     }  
 
     // Medoto o funcion donde mostramos los cargos en el formulario
-    public function registrar(): void 
-    {
+    public function registrar(): void {
+    
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: ' . BASE_URL);
             exit;
@@ -26,8 +28,8 @@ class EmpleadoController extends Controller
     }
 
     // Metodo o funcion donde registramos los empleados
-    public function guardar(): void 
-    {
+    public function guardar(): void {
+    
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: ' . BASE_URL);
             exit;
@@ -92,8 +94,8 @@ class EmpleadoController extends Controller
     }
 
     // Mostramos el formulario de editar
-    public function editar(int $id): void 
-    {
+    public function editar(int $id): void {
+
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: ' . BASE_URL);
             exit;
@@ -122,8 +124,8 @@ class EmpleadoController extends Controller
     }
 
     // Procesamos la actualizacion de los empleados
-    public function actualizar(): void 
-    {
+    public function actualizar(): void {
+    
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: ' . BASE_URL);
             exit;
@@ -159,8 +161,8 @@ class EmpleadoController extends Controller
     }
 
     // ELIMINAR EMPLEADO
-    public function eliminar(int $id): void 
-    {
+    public function eliminar(int $id): void {
+    
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: ' . BASE_URL);
             exit;

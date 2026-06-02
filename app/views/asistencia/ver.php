@@ -155,11 +155,11 @@ function actualizarTabla() {
                 empleados.forEach((emp) => {
                     let estadoHtml = '';
                     if (emp.estado === 'asistio') {
-                        estadoHtml = '<span class="badge badge-success">✅ Asistió</span>';
+                        estadoHtml = '<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i> Asistió</span>';
                     } else if (emp.estado === 'tardanza') {
-                        estadoHtml = '<span class="badge badge-warning">⚠️ Tardanza</span>';
+                        estadoHtml = '<span class="badge badge-warning"><i class="fa-solid fa-hourglass-half"></i>  Tardanza</span>';
                     } else if (emp.estado === 'falto') {
-                        estadoHtml = '<span class="badge badge-danger">❌ Faltó</span>';
+                        estadoHtml = '<span class="badge badge-danger"><i class="fa-solid fa-circle-xmark"></i>  Faltó</span>';
                     } else {
                         estadoHtml = '<span class="badge badge-sinmarcar">⬜ Sin marcar</span>';
                     }

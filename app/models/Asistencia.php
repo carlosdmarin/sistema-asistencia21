@@ -37,7 +37,7 @@ class Asistencia extends Model {
     public function registrarEntrada(int $idEmpleado, string $fecha, string $hora, string $estado): int {
         
         $stmt = $this->pdo->prepare("
-        INSERT INTO (id_empleado, fecha, hora_entrada, estado)
+        INSERT INTO ASISTENCIA (id_empleado, fecha, hora_entrada, estado)
         VALUES(:id, :fecha, :hora, :estado)
         ");
 

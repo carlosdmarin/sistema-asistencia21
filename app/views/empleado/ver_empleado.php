@@ -84,7 +84,6 @@
                                             class="btn-accion btn-eliminar" title="Eliminar">
                                         <i class="fas fa-trash"></i>
                                     </button>
-                                </div>
                             </td>
                         </tr>
                         <?php endforeach; ?>

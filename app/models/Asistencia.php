@@ -132,47 +132,58 @@ class Asistencia extends Model {
     // Marcar falta a los empleados sin registro
     public function marcarFaltasAutomaticas(string $fecha): int{
 
-        $stmt = $this->pdo->prepare("
-        SELECT e.id_empleado 
-            FROM EMPLEADO e 
-            WHERE e.id_empleado NOT IN (
-                SELECT id_empleado FROM ASISTENCIA WHERE fecha = :fecha
-            )
-        ");
+        $ahora = date('H:i:s');
+        $contador = 0;
 
+        // Obtener empleados que NO tienen registro
+        $stmt = $this->pdo->prepare("
+        SELECT e.id_empleado, t.hora_salida, t.nombre_turno
+        FROM EMPLEADO e 
+        INNER JOIN TURNO t ON e.id_turno = t.id_turno
+        WHERE e.id_empleado NOT IN (
+        SELECT id_empleado FROM ASISTENCIA WHERE fecha = :fecha
+        )
+        ");
         $stmt->execute(['fecha' => $fecha]);
         $faltantes = $stmt->fetchAll();
 
-        $contador = 0;
         foreach ($faltantes as $emp) {
-            $check = $this->pdo->prepare("SELECT 1 FROM ASISTENCIA WHERE id_empleado = :id AND fecha = :fecha");
-            $check->execute(['id' => $emp['id_empleado'], 'fecha' => $fecha]);
-            if (!$check->fetch()) {
+            // Calcular una hora antes salida de su turno 
+            $limiteFalta = date('H:i:s', strtotime($emp['hora_salida'] . '-1 hour'));
+
+            //  si ya paso la hora limite (1 hora antes de su salida)
+            if($ahora >= $limiteFalta){
                 $insert = $this->pdo->prepare("
-                    INSERT INTO ASISTENCIA (id_empleado, fecha, hora_entrada, estado) 
-                    VALUES (:id, :fecha, NULL, 'falto')
+                INSERT INTO ASISTENCIA(id_empleado, fecha, hora_entrada, estado)
+                VALUES (:id, :fecha, NULL, 'falto')
                 ");
-                $insert->execute(['id' => $emp['id_empleado'], 'fecha' => $fecha]);
+                $insert->execute(['id' => $emp['id_empleado'] , 'fecha' => $fecha]);
                 $contador++;
+                echo "Marcado falto: {$emp['id_empleado']} (Turno: {$emp['nombre_turno']}, Límite: $limiteFalta)\n";
             }
         }
         return $contador;
+            
     }
 
     // Marcar salidas automaticamentes para los que olvidaron marcar salida 
     public function marcarSalidasAutomaticas(string $fecha): int {
 
+        $ahora = date('H:i:s');
+        // Acutualizar empleados que marcaron entrada pero NO salida
+        // solo si ya paso la hora de su turno
         $stmt = $this->pdo->prepare("
         UPDATE ASISTENCIA a
-            INNER JOIN EMPLEADO e ON a.id_empleado = e.id_empleado
-            INNER JOIN TURNO t ON e.id_turno = t.id_turno
-            SET a.hora_salida = t.hora_salida
-            WHERE a.fecha = :fecha 
-              AND a.hora_entrada IS NOT NULL 
-              AND a.hora_salida IS NULL
-              AND a.estado IN ('asistio', 'tardanza')
+        INNER JOIN EMPLEADO e ON a.id_empleado = e.id_empleado
+        INNER JOIN TURNO t ON e.id_turno = t.id_turno
+        SET a.hora_salida = t.hora_salida
+        WHERE a.fecha = :fecha 
+          AND a.hora_entrada IS NOT NULL 
+          AND a.hora_salida IS NULL
+          AND a.estado IN ('asistio', 'tardanza')
+          AND t.hora_salida <= :ahora
         ");
-        $stmt->execute(['fecha' =>$fecha]);
+        $stmt->execute(['fecha' => $fecha, 'ahora' => $ahora]);
         return $stmt->rowCount();
     }
 

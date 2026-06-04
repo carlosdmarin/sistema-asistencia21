@@ -159,7 +159,7 @@ class Asistencia extends Model {
                 ");
                 $insert->execute(['id' => $emp['id_empleado'] , 'fecha' => $fecha]);
                 $contador++;
-                echo "Marcado falto: {$emp['id_empleado']} (Turno: {$emp['nombre_turno']}, Límite: $limiteFalta)\n";
+                // echo "Marcado falto: {$emp['id_empleado']} (Turno: {$emp['nombre_turno']}, Límite: $limiteFalta)\n";
             }
         }
         return $contador;

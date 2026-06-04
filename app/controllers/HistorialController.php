@@ -9,8 +9,8 @@ class HistorialController extends Controller
         $this->pdo = Database::getConnection();
     }
     
-    public function ver(): void 
-    {
+    public function ver(): void {
+    
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: ' . BASE_URL);
             exit;

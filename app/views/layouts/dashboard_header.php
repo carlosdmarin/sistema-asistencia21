@@ -4,6 +4,7 @@ $urlActual = $_GET['url'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -14,12 +15,13 @@ $urlActual = $_GET['url'] ?? '';
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/public/css/registro_asistencia.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
+
 <body>
 
     <button class="menu-toggle" id="menuToggle">
         <i class="fas fa-bars"></i>
     </button>
-    
+
     <div class="overlay" id="overlay"></div>
 
     <aside class="sidebar" id="sidebar">
@@ -27,7 +29,7 @@ $urlActual = $_GET['url'] ?? '';
             <span class="icono"><i class="fa-solid fa-users"></i></span>
             <span>Sistema de Asistencias</span>
         </h2>
-        
+
         <nav class="menu-container">
             <ul class="menu">
                 <!-- Dashboard -->
@@ -37,8 +39,27 @@ $urlActual = $_GET['url'] ?? '';
                         <span>Dashboard</span>
                     </a>
                 </li>
-                       <!-- Empleado -->
-                <li class="menu-item has-submenu <?php echo (strpos($urlActual, 'cargo') !== false) ? 'active' : ''; ?>">
+
+                <!-- Turnos -->
+                <li
+                    class="menu-item has-submenu <?php echo (strpos($urlActual, 'turno') !== false) ? 'active' : ''; ?>">
+                    <div class="menu-header">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Turnos</span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <ul class="submenu">
+                        <li class="<?php echo ($urlActual == 'turno/registrar') ? 'active' : ''; ?>">
+                            <a href="<?php echo BASE_URL; ?>/turno/registrar">Registrar Turno</a>
+                        </li>
+                        <li class="<?php echo ($urlActual == 'turno/ver') ? 'active' : ''; ?>">
+                            <a href="<?php echo BASE_URL; ?>/turno/ver">Ver Turnos</a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Empleado -->
+                <li
+                    class="menu-item has-submenu <?php echo (strpos($urlActual, 'cargo') !== false) ? 'active' : ''; ?>">
                     <div class="menu-header">
                         <i class="fa-solid fa-briefcase"></i>
                         <span>Cargo</span>
@@ -53,9 +74,10 @@ $urlActual = $_GET['url'] ?? '';
                         </li>
                     </ul>
                 </li>
-                
+
                 <!-- Empleado -->
-                <li class="menu-item has-submenu <?php echo (strpos($urlActual, 'empleado') !== false) ? 'active' : ''; ?>">
+                <li
+                    class="menu-item has-submenu <?php echo (strpos($urlActual, 'empleado') !== false) ? 'active' : ''; ?>">
                     <div class="menu-header">
                         <i class="fas fa-user"></i>
                         <span>Empleado</span>
@@ -70,9 +92,10 @@ $urlActual = $_GET['url'] ?? '';
                         </li>
                     </ul>
                 </li>
-                
+
                 <!-- Asistencia -->
-                <li class="menu-item has-submenu <?php echo (strpos($urlActual, 'asistencia') !== false) ? 'active' : ''; ?>">
+                <li
+                    class="menu-item has-submenu <?php echo (strpos($urlActual, 'asistencia') !== false) ? 'active' : ''; ?>">
                     <div class="menu-header">
                         <i class="fas fa-clock"></i>
                         <span>Asistencia</span>
@@ -84,9 +107,10 @@ $urlActual = $_GET['url'] ?? '';
                         </li>
                     </ul>
                 </li>
-                
+
                 <!-- Historial -->
-                <li class="menu-item has-submenu <?php echo (strpos($urlActual, 'historial') !== false) ? 'active' : ''; ?>">
+                <li
+                    class="menu-item has-submenu <?php echo (strpos($urlActual, 'historial') !== false) ? 'active' : ''; ?>">
                     <div class="menu-header">
                         <i class="fas fa-history"></i>
                         <span>Historial</span>
@@ -98,9 +122,10 @@ $urlActual = $_GET['url'] ?? '';
                         </li>
                     </ul>
                 </li>
-                
+
                 <!-- Reportes -->
-                <li class="menu-item has-submenu <?php echo (strpos($urlActual, 'reporte') !== false) ? 'active' : ''; ?>">
+                <li
+                    class="menu-item has-submenu <?php echo (strpos($urlActual, 'reporte') !== false) ? 'active' : ''; ?>">
                     <div class="menu-header">
                         <i class="fas fa-chart-line"></i>
                         <span>Reportes</span>
@@ -113,8 +138,9 @@ $urlActual = $_GET['url'] ?? '';
                     </ul>
                 </li>
 
-                  <!-- Usuarios -->
-                <li class="menu-item has-submenu <?php echo (strpos($urlActual, 'reporte') !== false) ? 'active' : ''; ?>">
+                <!-- Usuarios -->
+                <li
+                    class="menu-item has-submenu <?php echo (strpos($urlActual, 'usuario') !== false) ? 'active' : ''; ?>">
                     <div class="menu-header">
                         <i class="fa-solid fa-user-gear"></i>
                         <span>Usuario</span>
@@ -125,16 +151,16 @@ $urlActual = $_GET['url'] ?? '';
                             <a href="<?php echo BASE_URL; ?>/usuario/ver">Ver usuarios</a>
                         </li>
 
-                         <li class="<?php echo ($urlActual == 'usuario/registrar') ? 'active' : ''; ?>">
+                        <li class="<?php echo ($urlActual == 'usuario/registrar') ? 'active' : ''; ?>">
                             <a href="<?php echo BASE_URL; ?>/usuario/registrar">Registar Usuario</a>
                         </li>
                     </ul>
 
-                  
+
                 </li>
             </ul>
         </nav>
-        
+
         <div class="logout">
             <a href="#" class="logout-button" onclick="confirmarCerrarSesion(event)">
                 <i class="fas fa-sign-out-alt"></i>
@@ -142,7 +168,7 @@ $urlActual = $_GET['url'] ?? '';
             </a>
         </div>
     </aside>
-    <?php  include __DIR__ . '/dashboard_footer.php' ?>
+    <?php include __DIR__ . '/dashboard_footer.php' ?>
     <!-- CONTENIDO PRINCIPAL - EL main SE ABRE PERO NO SE CIERRA AQUÍ -->
     <main class="main-content" id="mainContent">
         <!-- EL CONTENIDO DE CADA VISTA SE INSERTA AQUÍ AUTOMÁTICAMENTE -->

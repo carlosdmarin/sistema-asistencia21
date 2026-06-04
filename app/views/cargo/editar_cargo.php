@@ -17,18 +17,16 @@
         </div>
     <?php endif; ?>
 
-    <div class="form-wrapper">
-        <form method="POST" action="<?php echo BASE_URL; ?>/cargo/actualizar">
-            <input type="hidden" name="id_cargo" value="<?php echo $cargo['id_cargo']; ?>">
-            
-            <div class="form-group">
-                <label><i class="fas fa-briefcase"></i> Nombre del Cargo:</label>
-                <input type="text" name="nombre" required value="<?php echo htmlspecialchars($cargo['nombre_cargo']); ?>">
-            </div>
-                        
-            <button type="submit" class="btn-submit">
-                <i class="fas fa-save"></i> Actualizar Cargo
-            </button>
-        </form>
-    </div>
+    <div class="form-group">
+    <label><i class="fas fa-briefcase"></i> Turno:</label>
+    <select name="id_turno" required>
+        <option value="">Seleccione un turno</option>
+        <?php foreach ($turnos as $turno): ?>
+            <option value="<?php echo $turno['id_turno']; ?>"
+                <?php echo $turno['id_turno'] == $empleado['id_turno'] ? 'selected' : ''; ?>>
+                <?php echo htmlspecialchars($turno['nombre_turno']); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
 </div>

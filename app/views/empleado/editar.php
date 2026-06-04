@@ -57,6 +57,18 @@
                     <?php endforeach; ?>
                 </select>
             </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-briefcase"></i> Turno:</label>
+                <select name="id_turno" required>
+                    <option value="">Seleccione un turno</option>
+                    <?php foreach ($turnos as $turno): ?>
+                        <option value="<?php echo $turno['id_turno']; ?>">
+                            <?php echo htmlspecialchars($turno['nombre_turno']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
             
             <button type="submit" class="btn-submit">
                 <i class="fas fa-save"></i> Actualizar Empleado

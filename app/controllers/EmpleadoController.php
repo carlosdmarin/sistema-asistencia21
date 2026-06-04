@@ -6,6 +6,7 @@ class EmpleadoController extends Controller
     private $pdo;
     public $Cargo;
     public $Empleado;
+    public $Turno;
 
     public function __construct() 
     {
@@ -22,8 +23,11 @@ class EmpleadoController extends Controller
         $this->loadModel('Cargo');
         $cargos = $this->Cargo->obtenerTodos();
         
+        $this->loadModel('Turno');
+        $turnos = $this->Turno->obtenerTodos();
         $this->view('empleado/registrar', [
-            'cargos' => $cargos
+            'cargos' => $cargos,
+            'turnos' => $turnos
         ], 'dashboard');
     }
 
@@ -47,7 +51,7 @@ class EmpleadoController extends Controller
             'dni'       => $_POST['dni'] ?? '',
             'telefono'  => $_POST['telefono'] ?? '',
             'id_cargo'  => $_POST['id_cargo'] ?? 0,
-            'id_turno'  => 1  // Turno por defecto
+            'id_turno'  => $_POST['id_turno'] // Turno por defecto
         ];
 
         
@@ -116,10 +120,14 @@ class EmpleadoController extends Controller
         // Obtener cargos
         $stmt = $this->pdo->query("SELECT * FROM CARGO ORDER BY nombre_cargo");
         $cargos = $stmt->fetchAll();
+
+        $this->loadModel('Turno');
+        $turnos = $this->Turno->obtenerTodos();
         
         $this->view('empleado/editar', [
             'empleado' => $empleado,
-            'cargos' => $cargos
+            'cargos' => $cargos,
+            'turnos' => $turnos
         ], 'dashboard');
     }
 
@@ -142,7 +150,8 @@ class EmpleadoController extends Controller
         'apellido'  => $_POST['apellido'] ?? '',
         'dni'       => $_POST['dni'] ?? '',
         'telefono'  => $_POST['telefono'] ?? '',
-        'id_cargo'  => $_POST['id_cargo'] ?? 0
+        'id_cargo'  => $_POST['id_cargo'] ?? 0,
+        'id_turno'  => $_POST['id_turno'] ?? 0
         ];
 
         // Cargamos el modelo 

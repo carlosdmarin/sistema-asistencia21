@@ -121,7 +121,7 @@ class Empleado extends Model
         // Actualizamos 
         $stmt = $this->pdo->prepare("UPDATE EMPLEADO
         SET nombre = :nombre, apellido = :apellido, dni = :dni, 
-        telefono = :telefono, id_cargo = :id_cargo
+        telefono = :telefono, id_cargo = :id_cargo, id_turno = :id_turno
         WHERE id_empleado = :id"
        );
 
@@ -131,7 +131,9 @@ class Empleado extends Model
         'dni'       => $datos['dni'],
         'telefono'  => $datos['telefono'],
         'id_cargo'  => $datos['id_cargo'],
+        'id_turno'  => $datos['id_turno'],
         'id'        => $id
+        
        ]);
 
        return ['ok' => true, 'mensaje' => 'Empleado Actualizado correctamente'];

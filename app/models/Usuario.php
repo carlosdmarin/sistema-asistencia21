@@ -43,7 +43,7 @@ class Usuario extends Model
         }
         
         // Insertar
-        $claveHash = password_hash($clave, PASSWORD_BCRYPT);
+        $claveHash = password_hash($clave, PASSWORD_BCxqRYPT);
         $stmt = $this->pdo->prepare("INSERT INTO USUARIO (nombre, clave) VALUES (:nombre, :clave)");
         $stmt->execute(['nombre' => $usuario, 'clave' => $claveHash]);
         

@@ -230,6 +230,6 @@ CREATE TABLE JUSTIFICACION(
 
  
 ### Modelo Relacional (MR)
-![MODELO_RELACIONAL]()
+![MODELO_RELACIONAL](recursos/imagenes/DIAGRAMA_DB.png)
 
 ### Cardinalidades

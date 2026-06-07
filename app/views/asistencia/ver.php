@@ -58,10 +58,16 @@
                             <?php endif; ?>
                         </td>
                         <td data-label="Justificacion">
-                            <button class="btn-justificar" onclick="justificarFalta(<?php echo $emp['id_empleado']; ?>, '<?php echo date('Y-m-d'); ?>', this)">
-                                <i class="fas fa-file-alt"></i> Justificar
-                            </button>
-                        </td>
+    <?php if ($emp['justificado'] == 1): ?>
+        <button class="btn-ver-justificacion" onclick="verJustificacion(<?php echo $emp['id_empleado']; ?>, '<?php echo date('Y-m-d'); ?>')">
+            <i class="fas fa-eye"></i> Ver justificación
+        </button>
+    <?php else: ?>
+        <button class="btn-justificar" onclick="justificarFalta(<?php echo $emp['id_empleado']; ?>, '<?php echo date('Y-m-d'); ?>', this)">
+            <i class="fas fa-file-alt"></i> Justificar
+        </button>
+    <?php endif; ?>
+</td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>

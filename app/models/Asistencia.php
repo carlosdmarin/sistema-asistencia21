@@ -88,25 +88,26 @@ class Asistencia extends Model {
         return $stmt->fetchAll();
     } 
 
-    // Obtener todos los empleados con su asistencia de hoy 
-    public function obtenerEmpleadosConAsistenciaHoy(string $fecha): array{
-        
-        $stmt = $this->pdo->prepare("
+    // Obtener todos los empleados con su asistencia de hoy (CON JUSTIFICACIÓN)
+// Obtener todos los empleados con su asistencia de hoy
+public function obtenerEmpleadosConAsistenciaHoy(string $fecha): array
+{
+    $stmt = $this->pdo->prepare("
         SELECT 
-                e.id_empleado, e.nombre, e.apellido, e.dni, e.telefono,
-                c.nombre_cargo, t.nombre_turno,
-                a.id_asistencia, a.hora_entrada, a.hora_salida, a.estado, a.fecha
-            FROM EMPLEADO e 
-            INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
-            INNER JOIN TURNO t ON e.id_turno = t.id_turno 
-            LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado AND a.fecha = :fecha
-            ORDER BY e.apellido, e.nombre
-        ");
-
-        $stmt->execute(['fecha' => $fecha]);
-        return $stmt->fetchAll();
-    }
-
+            e.id_empleado, e.nombre, e.apellido, e.dni, e.telefono,
+            c.nombre_cargo, t.nombre_turno,
+            a.id_asistencia, a.hora_entrada, a.hora_salida, a.estado, a.fecha,
+            CASE WHEN j.id_justificacion IS NOT NULL THEN 1 ELSE 0 END as justificado
+        FROM EMPLEADO e 
+        INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
+        INNER JOIN TURNO t ON e.id_turno = t.id_turno 
+        LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado AND a.fecha = :fecha
+        LEFT JOIN JUSTIFICACION j ON a.id_asistencia = j.id_asistencia
+        ORDER BY e.apellido, e.nombre
+    ");
+    $stmt->execute(['fecha' => $fecha]);
+    return $stmt->fetchAll();
+}
     // Obtener empleados con asistencia y justificacion para ajax 
     public function obtenerDatosAsistencia(string $fecha): array {
 
@@ -131,7 +132,7 @@ class Asistencia extends Model {
 
     // Marcar falta a los empleados sin registro   
     public function marcarFaltasAutomaticas(string $fecha): int
-    {
+{
     $ahora = date('H:i:s');
     $contador = 0;
 
@@ -146,8 +147,17 @@ class Asistencia extends Model {
     $stmt->execute(['fecha' => $fecha]);
     $faltantes = $stmt->fetchAll();
 
+    // DEPURACIÓN
+    error_log("=== marcarFaltasAutomaticas ===");
+    error_log("Hora actual: $ahora");
+    error_log("Empleados sin registro: " . count($faltantes));
+
     foreach ($faltantes as $emp) {
         $limiteFalta = date('H:i:s', strtotime($emp['hora_salida'] . ' -1 hour'));
+        
+        error_log("Empleado: {$emp['id_empleado']} - Turno: {$emp['nombre_turno']} - Salida: {$emp['hora_salida']} - Límite: $limiteFalta");
+        error_log("Condición: $ahora >= $limiteFalta && $ahora <= {$emp['hora_salida']} = " . (($ahora >= $limiteFalta && $ahora <= $emp['hora_salida']) ? 'TRUE' : 'FALSE'));
+        
         if ($ahora >= $limiteFalta && $ahora <= $emp['hora_salida']) {
             $insert = $this->pdo->prepare("
                 INSERT INTO ASISTENCIA (id_empleado, fecha, hora_entrada, estado)
@@ -155,6 +165,7 @@ class Asistencia extends Model {
             ");
             $insert->execute(['id' => $emp['id_empleado'], 'fecha' => $fecha]);
             $contador++;
+            error_log("  → MARCADO FALTO");
         }
     }
     return $contador;

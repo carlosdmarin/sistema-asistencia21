@@ -73,38 +73,43 @@ class Dashboard extends Model{
     }
     
     // Obtener últimos registros de asistencia
-    public function obtenerUltimosRegistros(int $limite = 5): array 
-    {
-        $sql = "SELECT a.*, e.nombre, e.apellido 
-                FROM ASISTENCIA a
-                JOIN EMPLEADO e ON a.id_empleado = e.id_empleado
-                ORDER BY a.fecha DESC, a.hora_entrada DESC
-                LIMIT :limite";
+    // Obtener últimos registros de asistencia
+public function obtenerUltimosRegistros(int $limite = 5): array 
+{
+    $sql = "SELECT a.*, e.nombre, e.apellido 
+            FROM ASISTENCIA a
+            JOIN EMPLEADO e ON a.id_empleado = e.id_empleado
+            ORDER BY a.fecha DESC, a.hora_entrada DESC
+            LIMIT :limite";
+    
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindParam(':limite', $limite, PDO::PARAM_INT);
+    $stmt->execute();
+    
+    $registros = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        // Convertir estado a español para mostrar
+        $estado = match($row['estado']) {
+            'asistio' => 'Presente',
+            'tardanza' => 'Tardanza',
+            'falto' => 'Ausente',
+            default => ucfirst($row['estado'])
+        };
         
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':limite', $limite, PDO::PARAM_INT);
-        $stmt->execute();
+        // Manejar hora nula (empleados que faltaron)
+        $hora = $row['hora_entrada'] ?? null;
+        $horaFormateada = $hora ? date('h:i A', strtotime($hora)) : '—';
         
-        $registros = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            // Convertir estado a español para mostrar
-            $estado = match($row['estado']) {
-                'asistio' => 'Presente',
-                'tardanza' => 'Tardanza',
-                'falto' => 'Ausente',
-                default => ucfirst($row['estado'])
-            };
-            
-            $registros[] = [
-                'empleado' => $row['nombre'] . ' ' . $row['apellido'],
-                'empleado_nombre' => $row['nombre'] . ' ' . $row['apellido'],
-                'fecha' => $row['fecha'],
-                'hora' => date('h:i A', strtotime($row['hora_entrada'])),
-                'estado' => $estado
-            ];
-        }
-        
-        return $registros;
+        $registros[] = [
+            'empleado' => $row['nombre'] . ' ' . $row['apellido'],
+            'empleado_nombre' => $row['nombre'] . ' ' . $row['apellido'],
+            'fecha' => $row['fecha'],
+            'hora' => $horaFormateada,
+            'estado' => $estado
+        ];
     }
+    
+    return $registros;
+}
 
 }

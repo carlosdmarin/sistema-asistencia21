@@ -1,17 +1,18 @@
 <?php
 // app/controllers/AsistenciaController.php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 class AsistenciaController extends Controller
 {
     private $pdo;
-    public  $asistenciaModel;
     public  $Asistencia;
 
     public function __construct()
     {
-    $this->pdo = Database::getConnection();
-    $this->loadModel('Asistencia');
-    $this->asistenciaModel = $this->Asistencia;  
+        $this->pdo = Database::getConnection();
+        $this->loadModel('Asistencia');
     }
 
     // Mostrar la pantalla del lector (PÚBLICO)
@@ -157,15 +158,15 @@ class AsistenciaController extends Controller
 
         // Solo marcar faltos después de las 5 PM
         if ($ahora >= '17:00:00') {
-            $this->asistenciaModel->marcarFaltasAutomaticas($hoy);
+            $this->Asistencia->marcarFaltasAutomaticas($hoy);
         }
 
         // Solo marcar salidas automáticas después de las 6 PM
         if ($ahora >= '18:00:00') {
-            $this->asistenciaModel->marcarSalidasAutomaticas($hoy);
+            $this->Asistencia->marcarSalidasAutomaticas($hoy);
         }
 
-        $empleados = $this->asistenciaModel->obtenerEmpleadosConAsistenciaHoy($hoy);
+        $empleados = $this->Asistencia->obtenerEmpleadosConAsistenciaHoy($hoy);
 
         $this->view('asistencia/ver', [
             'empleados' => $empleados
@@ -185,14 +186,14 @@ class AsistenciaController extends Controller
         $ahora = date('H:i:s');
 
         if ($ahora >= '17:00:00') {
-            $this->asistenciaModel->marcarFaltasAutomaticas($hoy);
+            $this->Asistencia->marcarFaltasAutomaticas($hoy);
         }
 
         if ($ahora >= '18:00:00') {
-            $this->asistenciaModel->marcarSalidasAutomaticas($hoy);
+            $this->Asistencia->marcarSalidasAutomaticas($hoy);
         }
 
-        $empleados = $this->asistenciaModel->obtenerDatosAsistencia($hoy);
+        $empleados = $this->Asistencia->obtenerDatosAsistencia($hoy);
 
         header('Content-Type: application/json');
         echo json_encode($empleados);
@@ -217,7 +218,7 @@ class AsistenciaController extends Controller
             exit;
         }
 
-        $resultado = $this->asistenciaModel->justificarFalta($id_empleado, $fecha, $motivo, $_SESSION['usuario_id']);
+        $resultado = $this->Asistencia->justificarFalta($id_empleado, $fecha, $motivo, $_SESSION['usuario_id']);
         
         echo json_encode($resultado);
         exit;
@@ -234,7 +235,7 @@ class AsistenciaController extends Controller
         $id_empleado = $_GET['id_empleado'] ?? 0;
         $fecha = $_GET['fecha'] ?? date('Y-m-d');
         
-        $resultado = $this->asistenciaModel->obtenerJustificacion($id_empleado, $fecha);
+        $resultado = $this->Asistencia->obtenerJustificacion($id_empleado, $fecha);
         
         echo json_encode($resultado);
         exit;

@@ -1,11 +1,10 @@
 <?php
 // app/index.php
 // CONFIGURACION DE LA ZONA HORARIA 
-date_default_timezone_set('America/Lima');
-
+// Mostrar errores (solo para depurar)x
 // Iniciar sesión
+// Asegurar que la sesión se inicia
 session_start();
-
 // Cargar configuración
 require_once __DIR__ . '/config/config.php';
 

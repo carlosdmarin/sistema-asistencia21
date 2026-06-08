@@ -1,10 +1,8 @@
 <?php
 // app/index.php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 // Asegurar que la sesión se inicia
 session_start();
+date_default_timezone_set('America/Lima');
 // Cargar configuración
 require_once __DIR__ . '/config/config.php';
 

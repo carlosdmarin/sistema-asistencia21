@@ -14,6 +14,31 @@ $urlActual = $_GET['url'] ?? '';
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/public/css/dashboard.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/public/css/registro_asistencia.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+        .badge-cargo {
+    background: #e0e7ff;
+    color: #4338ca;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: inline-block;
+}
+.badge-cargo {
+    background: #e0e7ff !important;
+    color: #4338ca !important;
+}
+
+.badge-turno {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: inline-block;
+}
+    </style>
 </head>
 
 <body>

@@ -1,5 +1,4 @@
 <?php
-// app/models/Asistencia.php
 
 class Asistencia extends Model {
 
@@ -89,24 +88,31 @@ class Asistencia extends Model {
     } 
 
     // Obtener todos los empleados con su asistencia de hoy (CON JUSTIFICACIÓN)
-// Obtener todos los empleados con su asistencia de hoy
-public function obtenerEmpleadosConAsistenciaHoy(string $fecha): array
+    public function obtenerEmpleadosConAsistenciaHoy(string $fecha): array
 {
-    $stmt = $this->pdo->prepare("
-        SELECT 
-            e.id_empleado, e.nombre, e.apellido, e.dni, e.telefono,
-            c.nombre_cargo, t.nombre_turno,
-            a.id_asistencia, a.hora_entrada, a.hora_salida, a.estado, a.fecha,
-            CASE WHEN j.id_justificacion IS NOT NULL THEN 1 ELSE 0 END as justificado
-        FROM EMPLEADO e 
-        INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
-        INNER JOIN TURNO t ON e.id_turno = t.id_turno 
-        LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado AND a.fecha = :fecha
-        LEFT JOIN JUSTIFICACION j ON a.id_asistencia = j.id_asistencia
-        ORDER BY e.apellido, e.nombre
-    ");
+    $sql = "SELECT 
+                e.id_empleado, e.nombre, e.apellido, e.dni, e.telefono,
+                c.nombre_cargo, t.nombre_turno,
+                a.id_asistencia, a.hora_entrada, a.hora_salida, a.estado, a.fecha,
+                CASE WHEN j.id_justificacion IS NOT NULL THEN 1 ELSE 0 END as justificado
+            FROM EMPLEADO e 
+            INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
+            INNER JOIN TURNO t ON e.id_turno = t.id_turno 
+            LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado AND a.fecha = :fecha
+            LEFT JOIN JUSTIFICACION j ON a.id_asistencia = j.id_asistencia
+            ORDER BY e.apellido, e.nombre";
+    
+    $stmt = $this->pdo->prepare($sql);
     $stmt->execute(['fecha' => $fecha]);
-    return $stmt->fetchAll();
+    $result = $stmt->fetchAll();
+    
+    // DEPURACIÓN
+    error_log("=== obtenerEmpleadosConAsistenciaHoy ===");
+    foreach ($result as $row) {
+        error_log("ID: {$row['id_empleado']} - justificado: " . ($row['justificado'] ?? 'NULL'));
+    }
+    
+    return $result;
 }
     // Obtener empleados con asistencia y justificacion para ajax 
     public function obtenerDatosAsistencia(string $fecha): array {

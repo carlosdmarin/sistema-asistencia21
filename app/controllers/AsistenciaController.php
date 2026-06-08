@@ -1,9 +1,8 @@
 <?php
 // app/controllers/AsistenciaController.php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', '/Applications/XAMPP/xamppfiles/logs/php_error_log');
 error_reporting(E_ALL);
-
 class AsistenciaController extends Controller
 {
     private $pdo;
@@ -155,6 +154,10 @@ class AsistenciaController extends Controller
 
         $hoy = date('Y-m-d');
         $ahora = date('H:i:s');
+            // DEPURACIÓN: Ver qué día es
+    error_log("=== VER ASISTENCIAS ===");
+    error_log("Fecha: $hoy");
+    error_log("Hora: $ahora");
 
         // Solo marcar faltos después de las 5 PM
         if ($ahora >= '17:00:00') {

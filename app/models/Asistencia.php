@@ -133,7 +133,16 @@ class Asistencia extends Model {
         ");
 
         $stmt->execute(['fecha' => $fecha]);
-        return $stmt->fetchAll();
+        $empleados = $stmt->fetchAll();
+
+            // LIMPIAR BARRAS DE LOS NOMBRES
+        foreach ($empleados as &$emp) {
+        $emp['nombre'] = str_replace('\\', '', $emp['nombre']);
+        $emp['apellido'] = str_replace('\\', '', $emp['apellido']);
+        $emp['nombre_cargo'] = str_replace('\\', '', $emp['nombre_cargo']);
+        $emp['nombre_turno'] = str_replace('\\', '', $emp['nombre_turno']);
+    }
+        return $empleados();
     }
 
     // Marcar falta a los empleados sin registro   

@@ -1,9 +1,5 @@
 <?php
 // app/controllers/ReporteController.php
-// app/controllers/ReporteController.php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 class ReporteController extends Controller
 {
     private $reporteModel;

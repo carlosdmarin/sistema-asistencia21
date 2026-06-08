@@ -186,8 +186,8 @@ class Asistencia extends Model {
     return $contador;
 }
 
-// Marcar salidas automaticamente para los que olvidaron marcar salida 
-public function marcarSalidasAutomaticas(string $fecha): int
+    // Marcar salidas automaticamente para los que olvidaron marcar salida 
+    public function marcarSalidasAutomaticas(string $fecha): int
 {
     $ahora = date('H:i:s');
     
@@ -204,7 +204,7 @@ public function marcarSalidasAutomaticas(string $fecha): int
     ");
     $stmt->execute(['fecha' => $fecha, 'ahora' => $ahora]);
     return $stmt->rowCount();
-}
+    }
 
     // Justificar una falta 
     public function justificarFalta(int $idEmpleado, string $fecha, string $motivo, int $idUsuario): array{

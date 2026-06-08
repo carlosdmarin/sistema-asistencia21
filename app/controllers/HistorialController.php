@@ -1,6 +1,6 @@
 <?php
-class HistorialController extends Controller 
-{
+class HistorialController extends Controller {
+
     private $pdo;
     public $Historial;
     

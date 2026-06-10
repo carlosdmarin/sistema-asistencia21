@@ -45,4 +45,5 @@ class Historial extends Model{
         $stmt->execute(['fecha' => $fecha]);
         return $stmt->fetch() ?: ['total' => 0, 'asistencias' => 0, 'tardanzas' => 0, 'faltas' => 0];
     }
+    
 }

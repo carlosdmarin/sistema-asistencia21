@@ -20,7 +20,7 @@ class TurnoController extends Controller
         }
         
         $turnos = $this->Turno->obtenerTodos();
-        
+
         $this->view('turno/ver', [
             'turnos' => $turnos
         ], 'dashboard');

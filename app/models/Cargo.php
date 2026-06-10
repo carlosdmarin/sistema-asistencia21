@@ -1,8 +1,7 @@
 <?php
 // app/models/Cargo.php
 
-class Cargo extends Model 
-{
+class Cargo extends Model {
 
     //  Funcion para obtner todos los cargos
     public function obtenerTodos(): array 
@@ -10,7 +9,6 @@ class Cargo extends Model
         $stmt = $this->pdo->query("SELECT * FROM CARGO ORDER BY nombre_cargo");
         return $stmt->fetchAll();
     }
-
     // Guardar un nuevo cargo
     public function registrarCargo(string $nombre): array {
     
@@ -65,8 +63,8 @@ class Cargo extends Model
     $stmt = $this->pdo->prepare("SELECT * FROM CARGO WHERE id_cargo = :id");
     $stmt->execute(['id' => $id]);
     return $stmt->fetch() ?: null;
-    }
-
+    }   
+    
     public function actualizarCargo(int $id, string $nombre): array {
 
     if (empty($nombre)) {
@@ -86,4 +84,5 @@ class Cargo extends Model
     
     return ['ok' => true, 'mensaje' => 'Cargo actualizado correctamente.'];
     }
+
 }

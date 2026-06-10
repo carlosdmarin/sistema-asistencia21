@@ -19,7 +19,7 @@ class Controller
             }
         }
     }
-    
+
     protected function view(string $vista, array $datos = [], string $layout = 'default'): void 
     {
         extract($datos);

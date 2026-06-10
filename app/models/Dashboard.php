@@ -34,7 +34,7 @@ class Dashboard extends Model{
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return (int) ($result['total'] ?? 0);
     }
-    
+
     // Calcular porcentaje de asistencia hoy
     public function calcularPorcentajeAsistenciaHoy(): int 
     {
@@ -73,9 +73,8 @@ class Dashboard extends Model{
     }
     
     // Obtener últimos registros de asistencia
-    // Obtener últimos registros de asistencia
-public function obtenerUltimosRegistros(int $limite = 5): array 
-{
+    public function obtenerUltimosRegistros(int $limite = 5): array {
+
     $sql = "SELECT a.*, e.nombre, e.apellido 
             FROM ASISTENCIA a
             JOIN EMPLEADO e ON a.id_empleado = e.id_empleado
@@ -110,6 +109,6 @@ public function obtenerUltimosRegistros(int $limite = 5): array
     }
     
     return $registros;
-}
+    }
 
 }

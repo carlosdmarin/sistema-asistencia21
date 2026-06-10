@@ -18,7 +18,7 @@ class Usuario extends Model
         return $stmt->fetch() ?: null;
     }
 
-
+    
     public function registrar(string $usuario, string $clave): array 
     {
         // Validaciones

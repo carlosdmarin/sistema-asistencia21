@@ -25,11 +25,16 @@
     <div class="hero-image w-full relative min-h-[300px] sm:min-h-[400px] md:min-h-[450px] lg:min-h-[500px]">
       <!-- Imagen de fondo que ocupa todo el ancho -->
       <div class="absolute inset-0 w-full h-full">
-        <img 
-          src="<?php echo BASE_URL; ?>/public/images/slider.png"
-          alt="Gestión de asistencia"
-          class="w-full h-full object-cover"
-        />
+      <video 
+    autoplay 
+    muted 
+    loop 
+    playsinline
+    class="w-full h-full object-cover"
+>
+    <source src="<?php echo BASE_URL; ?>/public/images/silader.mp4" type="video/mp4">
+    Tu navegador no soporta videos.
+</video>
         <!-- Capa oscura para mejor legibilidad del texto -->
         <div class="absolute inset-0 bg-black/40"></div>
       </div>

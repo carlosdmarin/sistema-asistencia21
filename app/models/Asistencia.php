@@ -1,9 +1,11 @@
 <?php
 
-class Asistencia extends Model {
+class Asistencia extends Model
+{
 
     // Buscar empleado por DNI (con sus datos de cargo y turno)
-    public function buscarEmpleadoPorDni(string $dni): ?array{
+    public function buscarEmpleadoPorDni(string $dni): ?array
+    {
         $stmt = $this->pdo->prepare("
             SELECT e.*, c.nombre_cargo,
                 t.nombre_turno,
@@ -21,7 +23,8 @@ class Asistencia extends Model {
     }
 
     // Buscar asistencias del dia para un empleado
-    public function buscarAsistenciaHoy(int $idEmpleado ,string $fecha): ?array{
+    public function buscarAsistenciaHoy(int $idEmpleado, string $fecha): ?array
+    {
 
         $stmt = $this->pdo->prepare("
         SELECT * FROM ASISTENCIA 
@@ -33,8 +36,9 @@ class Asistencia extends Model {
     }
 
     // Registrar entrada
-    public function registrarEntrada(int $idEmpleado, string $fecha, string $hora, string $estado): int {
-        
+    public function registrarEntrada(int $idEmpleado, string $fecha, string $hora, string $estado): int
+    {
+
         $stmt = $this->pdo->prepare("
         INSERT INTO ASISTENCIA (id_empleado, fecha, hora_entrada, estado)
         VALUES(:id, :fecha, :hora, :estado)
@@ -50,25 +54,28 @@ class Asistencia extends Model {
     }
 
     // Registrar salida 
-    public function registrarSalida(int $idAsistencia, string $hora): bool{
-        
+    public function registrarSalida(int $idAsistencia, string $hora): bool
+    {
+
         $stmt = $this->pdo->prepare("
         UPDATE ASISTENCIA 
         SET hora_salida = :hora
         WHERE id_asistencia = :id
         ");
-        return $stmt->execute(['hora' =>$hora, 'id' =>$idAsistencia]);
+        return $stmt->execute(['hora' => $hora, 'id' => $idAsistencia]);
     }
 
     // Determinar estado (asistio o tardanza)
-    public function determinarEstado(string $horaInicio, int $toleranciaMinutos, string $horaLlegada): string{
+    public function determinarEstado(string $horaInicio, int $toleranciaMinutos, string $horaLlegada): string
+    {
 
-        $horaLimite = date('H:i:s', strtotime($horaInicio . ' + ' . $toleranciaMinutos . 'minutes' ));
+        $horaLimite = date('H:i:s', strtotime($horaInicio . ' + ' . $toleranciaMinutos . 'minutes'));
         return $horaLlegada <= $horaLimite ? 'asistio' : 'tardanza';
     }
 
     // Obtener las 10 ultimas asistencias
-    public function obtenerUltimasAsistencias(int $limite =10): array{
+    public function obtenerUltimasAsistencias(int $limite = 10): array
+    {
 
         $hoy = date('Y-m-d');
         $stmt = $this->pdo->prepare("
@@ -85,12 +92,12 @@ class Asistencia extends Model {
         $stmt->bindParam(':limite', $limite, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
-    } 
+    }
 
     // Obtener todos los empleados con su asistencia de hoy (CON JUSTIFICACIÓN)
     public function obtenerEmpleadosConAsistenciaHoy(string $fecha): array
-{
-    $sql = "SELECT 
+    {
+        $sql = "SELECT 
                 e.id_empleado, e.nombre, e.apellido, e.dni, e.telefono,
                 c.nombre_cargo, t.nombre_turno,
                 a.id_asistencia, a.hora_entrada, a.hora_salida, a.estado, a.fecha,
@@ -101,21 +108,22 @@ class Asistencia extends Model {
             LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado AND a.fecha = :fecha
             LEFT JOIN JUSTIFICACION j ON a.id_asistencia = j.id_asistencia
             ORDER BY e.apellido, e.nombre";
-    
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->execute(['fecha' => $fecha]);
-    $result = $stmt->fetchAll();
-    
-    // DEPURACIÓN
-    error_log("=== obtenerEmpleadosConAsistenciaHoy ===");
-    foreach ($result as $row) {
-        error_log("ID: {$row['id_empleado']} - justificado: " . ($row['justificado'] ?? 'NULL'));
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['fecha' => $fecha]);
+        $result = $stmt->fetchAll();
+
+        // DEPURACIÓN
+        error_log("=== obtenerEmpleadosConAsistenciaHoy ===");
+        foreach ($result as $row) {
+            error_log("ID: {$row['id_empleado']} - justificado: " . ($row['justificado'] ?? 'NULL'));
+        }
+
+        return $result;
     }
-    
-    return $result;
-}
     // Obtener empleados con asistencia y justificacion para ajax 
-    public function obtenerDatosAsistencia(string $fecha): array {
+    public function obtenerDatosAsistencia(string $fecha): array
+    {
 
         $stmt = $this->pdo->prepare("
         SELECT 
@@ -135,23 +143,23 @@ class Asistencia extends Model {
         $stmt->execute(['fecha' => $fecha]);
         $empleados = $stmt->fetchAll();
 
-            // LIMPIAR BARRAS DE LOS NOMBRES
+        // LIMPIAR BARRAS DE LOS NOMBRES
         foreach ($empleados as &$emp) {
-        $emp['nombre'] = str_replace('\\', '', $emp['nombre']);
-        $emp['apellido'] = str_replace('\\', '', $emp['apellido']);
-        $emp['nombre_cargo'] = str_replace('\\', '', $emp['nombre_cargo']);
-        $emp['nombre_turno'] = str_replace('\\', '', $emp['nombre_turno']);
-    }
-        return $empleados();
+            $emp['nombre'] = str_replace('\\', '', $emp['nombre']);
+            $emp['apellido'] = str_replace('\\', '', $emp['apellido']);
+            $emp['nombre_cargo'] = str_replace('\\', '', $emp['nombre_cargo']);
+            $emp['nombre_turno'] = str_replace('\\', '', $emp['nombre_turno']);
+        }
+        return $empleados;
     }
 
     // Marcar falta a los empleados sin registro   
     public function marcarFaltasAutomaticas(string $fecha): int
-{
-    $ahora = date('H:i:s');
-    $contador = 0;
+    {
+        $ahora = date('H:i:s');
+        $contador = 0;
 
-    $stmt = $this->pdo->prepare("
+        $stmt = $this->pdo->prepare("
         SELECT e.id_empleado, t.hora_salida, t.nombre_turno
         FROM EMPLEADO e 
         INNER JOIN TURNO t ON e.id_turno = t.id_turno
@@ -159,39 +167,39 @@ class Asistencia extends Model {
             SELECT id_empleado FROM ASISTENCIA WHERE fecha = :fecha
         )
     ");
-    $stmt->execute(['fecha' => $fecha]);
-    $faltantes = $stmt->fetchAll();
+        $stmt->execute(['fecha' => $fecha]);
+        $faltantes = $stmt->fetchAll();
 
-    // DEPURACIÓN
-    error_log("=== marcarFaltasAutomaticas ===");
-    error_log("Hora actual: $ahora");
-    error_log("Empleados sin registro: " . count($faltantes));
+        // DEPURACIÓN
+        error_log("=== marcarFaltasAutomaticas ===");
+        error_log("Hora actual: $ahora");
+        error_log("Empleados sin registro: " . count($faltantes));
 
-    foreach ($faltantes as $emp) {
-        $limiteFalta = date('H:i:s', strtotime($emp['hora_salida'] . ' -1 hour'));
-        
-        error_log("Empleado: {$emp['id_empleado']} - Turno: {$emp['nombre_turno']} - Salida: {$emp['hora_salida']} - Límite: $limiteFalta");
-        error_log("Condición: $ahora >= $limiteFalta && $ahora <= {$emp['hora_salida']} = " . (($ahora >= $limiteFalta && $ahora <= $emp['hora_salida']) ? 'TRUE' : 'FALSE'));
-        
-        if ($ahora >= $limiteFalta && $ahora <= $emp['hora_salida']) {
-            $insert = $this->pdo->prepare("
+        foreach ($faltantes as $emp) {
+            $limiteFalta = date('H:i:s', strtotime($emp['hora_salida'] . ' -1 hour'));
+
+            error_log("Empleado: {$emp['id_empleado']} - Turno: {$emp['nombre_turno']} - Salida: {$emp['hora_salida']} - Límite: $limiteFalta");
+            error_log("Condición: $ahora >= $limiteFalta && $ahora <= {$emp['hora_salida']} = " . (($ahora >= $limiteFalta && $ahora <= $emp['hora_salida']) ? 'TRUE' : 'FALSE'));
+
+            if ($ahora >= $limiteFalta && $ahora <= $emp['hora_salida']) {
+                $insert = $this->pdo->prepare("
                 INSERT INTO ASISTENCIA (id_empleado, fecha, hora_entrada, estado)
                 VALUES (:id, :fecha, NULL, 'falto')
             ");
-            $insert->execute(['id' => $emp['id_empleado'], 'fecha' => $fecha]);
-            $contador++;
-            error_log("  → MARCADO FALTO");
+                $insert->execute(['id' => $emp['id_empleado'], 'fecha' => $fecha]);
+                $contador++;
+                error_log("  → MARCADO FALTO");
+            }
         }
+        return $contador;
     }
-    return $contador;
-}
 
     // Marcar salidas automaticamente para los que olvidaron marcar salida 
     public function marcarSalidasAutomaticas(string $fecha): int
-{
-    $ahora = date('H:i:s');
-    
-    $stmt = $this->pdo->prepare("
+    {
+        $ahora = date('H:i:s');
+
+        $stmt = $this->pdo->prepare("
         UPDATE ASISTENCIA a
         INNER JOIN EMPLEADO e ON a.id_empleado = e.id_empleado
         INNER JOIN TURNO t ON e.id_turno = t.id_turno
@@ -202,12 +210,13 @@ class Asistencia extends Model {
           AND a.estado IN ('asistio', 'tardanza')
           AND t.hora_salida <= :ahora
     ");
-    $stmt->execute(['fecha' => $fecha, 'ahora' => $ahora]);
-    return $stmt->rowCount();
+        $stmt->execute(['fecha' => $fecha, 'ahora' => $ahora]);
+        return $stmt->rowCount();
     }
 
     // Justificar una falta 
-    public function justificarFalta(int $idEmpleado, string $fecha, string $motivo, int $idUsuario): array{
+    public function justificarFalta(int $idEmpleado, string $fecha, string $motivo, int $idUsuario): array
+    {
 
         // buscar si existe una asistencia
         $stmt = $this->pdo->prepare("
@@ -218,25 +227,25 @@ class Asistencia extends Model {
         $asistencia = $stmt->fetch();
 
         // Si no existe lo ponemos como 'falto'
-        if(!$asistencia){
+        if (!$asistencia) {
             $stmt = $this->pdo->prepare("
             INSERT INTO ASISTENCIA (id_empleado, fecha, estado)
             VALUES (:id, :fecha, 'falto')
             ");
             $stmt->execute(['id' => $idEmpleado, 'fecha' => $fecha]);
             $asistencia_id = $this->pdo->lastInsertId();
-        }else{
+        } else {
             $asistencia_id = $asistencia['id_asistencia'];
         }
 
         // Verificar si ya existe una justificación
         $stmt = $this->pdo->prepare("SELECT id_justificacion FROM JUSTIFICACION WHERE id_asistencia = :id");
         $stmt->execute(['id' => $asistencia_id]);
-        
+
         if ($stmt->fetch()) {
             return ['ok' => false, 'mensaje' => 'Esta asistencia ya está justificada'];
         }
-        
+
         // Insertar justificación
         $stmt = $this->pdo->prepare("
             INSERT INTO JUSTIFICACION (id_asistencia, motivo, justificado_por) 
@@ -247,12 +256,12 @@ class Asistencia extends Model {
             'motivo' => $motivo,
             'user' => $idUsuario
         ]);
-        
+
         return ['ok' => true, 'mensaje' => 'Justificación guardada correctamente'];
     }
 
-     // Obtener justificación de una falta
-    public function obtenerJustificacion(int $idEmpleado, string $fecha): array 
+    // Obtener justificación de una falta
+    public function obtenerJustificacion(int $idEmpleado, string $fecha): array
     {
         $stmt = $this->pdo->prepare("
             SELECT j.motivo, j.fecha_justificacion 
@@ -262,7 +271,7 @@ class Asistencia extends Model {
         ");
         $stmt->execute(['id_empleado' => $idEmpleado, 'fecha' => $fecha]);
         $justificacion = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($justificacion) {
             return [
                 'justificada' => true,
@@ -270,7 +279,7 @@ class Asistencia extends Model {
                 'fecha_justificacion' => $justificacion['fecha_justificacion']
             ];
         }
-        
+
         return ['justificada' => false];
     }
 
@@ -280,5 +289,5 @@ class Asistencia extends Model {
 
 
 
-    
+
 }

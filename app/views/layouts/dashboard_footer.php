@@ -118,6 +118,7 @@ function formatFecha(fecha) {
     const BASE_URL = '<?php echo BASE_URL; ?>';
 </script>
     <script src="<?php echo BASE_URL; ?>/public/js/dashboard.js"></script>
+    <script src="<?php echo BASE_URL; ?>/public/js/reporte.js"></script>
     
 </body>
 </html>

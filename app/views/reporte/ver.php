@@ -85,14 +85,52 @@
         </div>
 
         <!-- CARD 4: Resumen Mensual (próximamente) -->
-        <div class="report-card coming-soon">
-            <div class="card-icon">
-                <i class="fa-solid fa-chart-simple"></i>
-            </div>
-            <h3>Resumen Mensual</h3>
-            <p>Estadísticas por empleado por mes</p>
-            <div class="badge-proximamente">Próximamente</div>
-        </div>
+        <!-- CARD 4: Resumen Mensual -->
+<div class="report-card">
+    <div class="card-icon">
+        <i class="fa-solid fa-chart-simple"></i>
+    </div>
+    <h3>Resumen Mensual</h3>
+    <p>Estadísticas por empleado por mes (asistencias, tardanzas, faltas)</p>
+
+    <div class="card-filtro">
+        <label>Seleccionar Mes</label>
+        <select id="mes_resumen">
+            <option value="1">Enero</option>
+            <option value="2">Febrero</option>
+            <option value="3">Marzo</option>
+            <option value="4">Abril</option>
+            <option value="5">Mayo</option>
+            <option value="6" selected>Junio</option>
+            <option value="7">Julio</option>
+            <option value="8">Agosto</option>
+            <option value="9">Septiembre</option>
+            <option value="10">Octubre</option>
+            <option value="11">Noviembre</option>
+            <option value="12">Diciembre</option>
+        </select>
+    </div>
+    <div class="card-filtro">
+        <label>Seleccionar Año</label>
+        <select id="anio_resumen">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026" selected>2026</option>
+        </select>
+    </div>
+
+    <div class="card-buttons">
+        <button class="btn-generar" onclick="generarResumenMensual()">
+            <i class="fa-solid fa-chart-simple"></i> Generar
+        </button>
+        <button class="btn-excel" onclick="exportarExcelResumenMensual()">
+            <i class="fa-solid fa-file-excel"></i> Excel
+        </button>
+        <button class="btn-pdf" onclick="exportarPDFResumenMensual()">
+            <i class="fa-solid fa-file-pdf"></i> PDF
+        </button>
+    </div>
+</div>
     </div>
 
     <!-- Tabla de Resultados (se muestra después de generar) -->

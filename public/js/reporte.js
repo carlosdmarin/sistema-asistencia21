@@ -1,4 +1,93 @@
+// =============================================
+// REPORTE DE ASISTENCIA POR FECHA
+// =============================================
 
+function generarReporteAsistencia() {
+    const fecha = document.getElementById('fecha_asistencia').value;
+    if (!fecha) {
+        alert('Seleccione una fecha');
+        return;
+    }
+    
+    const tbody = document.getElementById('resultado-tbody');
+    const thead = document.querySelector('#tabla-resultados thead');
+    const fechaMostrada = document.getElementById('fecha-mostrada');
+    
+    // Cambiar cabeceras para Asistencia por Fecha
+    thead.innerHTML = `
+        <tr>
+            <th>ID</th>
+            <th>Empleado</th>
+            <th>DNI</th>
+            <th>Cargo</th>
+            <th>Entrada</th>
+            <th>Salida</th>
+            <th>Estado</th>
+        </tr>
+    `;
+    
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;"><i class="fa-solid fa-spinner fa-spin"></i> Cargando...<\/td><\/tr>';
+    document.getElementById('resultado-container').style.display = 'block';
+    fechaMostrada.innerHTML = '📅 Fecha: ' + formatFecha(fecha);
+    
+    fetch(`${BASE_URL}/reporte/apiAsistenciaPorFecha?fecha=${fecha}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No hay registros para esta fecha<\/td><\/tr>';
+                return;
+            }
+            
+            let html = '';
+            data.forEach(reg => {
+                let claseEstado = '';
+                if (reg.estado === 'Asistió') claseEstado = 'badge-success';
+                else if (reg.estado === 'Tardanza') claseEstado = 'badge-warning';
+                else if (reg.estado === 'Faltó') claseEstado = 'badge-danger';
+                else claseEstado = 'badge-sinmarcar';
+                
+                html += `
+                    <tr>
+                        <td>${reg.id_empleado}<\/td>
+                        <td>${reg.nombre} ${reg.apellido}<\/td>
+                        <td>${reg.dni}<\/td>
+                        <td>${reg.nombre_cargo}<\/td>
+                        <td>${reg.hora_entrada || '—'}<\/td>
+                        <td>${reg.hora_salida || '—'}<\/td>
+                        <td><span class="${claseEstado}">${reg.estado}<\/span><\/td>
+                    <\/tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Error al cargar los datos<\/td><\/tr>';
+        });
+}
+
+function exportarExcelAsistencia() {
+    const fecha = document.getElementById('fecha_asistencia').value;
+    if (!fecha) {
+        alert('Seleccione una fecha primero');
+        return;
+    }
+    window.open(`${BASE_URL}/reporte/exportarExcelAsistencia?fecha=${fecha}`, '_blank');
+}
+
+function exportarPDFAsistencia() {
+    const fecha = document.getElementById('fecha_asistencia').value;
+    if (!fecha) {
+        alert('Seleccione una fecha primero');
+        return;
+    }
+    window.open(`${BASE_URL}/reporte/exportarPDFAsistencia?fecha=${fecha}`, '_blank');
+}
+
+function formatFecha(fecha) {
+    const partes = fecha.split('-');
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
 
 // =============================================
 // REPORTE MENSUAL (RESUMEN)
@@ -9,29 +98,10 @@ function generarResumenMensual() {
     const anio = document.getElementById('anio_resumen').value;
     
     const tbody = document.getElementById('resultado-tbody');
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align: center;"><i class="fa-solid fa-spinner fa-spin"></i> Cargando...<\/td><\/tr>';
-    document.getElementById('resultado-container').style.display = 'block';
-    
-    fetch(`${BASE_URL}/reporte/resumenMensual?mes=${mes}&anio=${anio}`)
-        .then(response => response.json())
-        .then(data => {
-            actualizarTablaResumen(data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            tbody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Error al cargar los datos<\/td><\/tr>';
-        });
-}
-
-function actualizarTablaResumen(data) {
-    const resultados = data.datos;
-    const tbody = document.getElementById('resultado-tbody');
+    const thead = document.querySelector('#tabla-resultados thead');
     const fechaMostrada = document.getElementById('fecha-mostrada');
     
-    fechaMostrada.innerHTML = `${data.nombre_mes} - ${data.anio} (${data.dias_laborales} días laborales)`;
-    
-    // Cambiar cabeceras de la tabla para reporte mensual
-    const thead = document.querySelector('#tabla-resultados thead');
+    // Cambiar cabeceras para Resumen Mensual
     thead.innerHTML = `
         <tr>
             <th>ID</th>
@@ -48,8 +118,30 @@ function actualizarTablaResumen(data) {
         </tr>
     `;
     
+    tbody.innerHTML = '</table><td colspan="11" style="text-align: center;"><i class="fa-solid fa-spinner fa-spin"></i> Cargando...<\/td><\/tr>';
+    document.getElementById('resultado-container').style.display = 'block';
+    fechaMostrada.innerHTML = `${getNombreMes(mes)} - ${anio}`;
+    
+    fetch(`${BASE_URL}/reporte/resumenMensual?mes=${mes}&anio=${anio}`)
+        .then(response => response.json())
+        .then(data => {
+            actualizarTablaResumen(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            tbody.innerHTML = '<tr><td colspan="11" style="text-align: center;">Error al cargar los datos<\/td><\/tr>';
+        });
+}
+
+function actualizarTablaResumen(data) {
+    const resultados = data.datos;
+    const tbody = document.getElementById('resultado-tbody');
+    const fechaMostrada = document.getElementById('fecha-mostrada');
+    
+    fechaMostrada.innerHTML = `${data.nombre_mes} - ${data.anio} (${data.dias_laborales} días laborales)`;
+    
     if (resultados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" style="text-align: center;">No hay datos para este período<\/td><\/tr>';
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align: center;">No hay datos para este período<\/td><\/tr>';
         return;
     }
     
@@ -76,7 +168,6 @@ function actualizarTablaResumen(data) {
              \\
         `;
     });
-    
     tbody.innerHTML = html;
 }
 
@@ -92,14 +183,40 @@ function exportarPDFResumenMensual() {
     window.open(`${BASE_URL}/reporte/exportarPDFResumenMensual?mes=${mes}&anio=${anio}`, '_blank');
 }
 
+function getNombreMes(mes) {
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    return meses[parseInt(mes) - 1];
+}
+
+// =============================================
+// RANKING DE PUNTUALIDAD
+// =============================================
 
 function generarRankingPuntualidad() {
     const fechaInicio = document.getElementById('ranking_fecha_inicio').value;
     const fechaFin = document.getElementById('ranking_fecha_fin').value;
     
     const tbody = document.getElementById('resultado-tbody');
+    const thead = document.querySelector('#tabla-resultados thead');
+    const fechaMostrada = document.getElementById('fecha-mostrada');
+    
+    // Cambiar cabeceras para Ranking de Puntualidad
+    thead.innerHTML = `
+        <tr>
+            <th>#</th>
+            <th>Empleado</th>
+            <th>DNI</th>
+            <th>Cargo</th>
+            <th>Turno</th>
+            <th>Tardanzas</th>
+            <th>Minutos tarde</th>
+            <th>Puntualidad</th>
+        </tr>
+    `;
+    
     tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;"><i class="fa-solid fa-spinner fa-spin"></i> Cargando...<\/td><\/tr>';
     document.getElementById('resultado-container').style.display = 'block';
+    fechaMostrada.innerHTML = `Ranking de Puntualidad (${formatFecha(fechaInicio)} - ${formatFecha(fechaFin)})`;
     
     fetch(`${BASE_URL}/reporte/rankingPuntualidad?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
         .then(response => response.json())
@@ -114,22 +231,6 @@ function generarRankingPuntualidad() {
 
 function actualizarTablaRanking(data) {
     const tbody = document.getElementById('resultado-tbody');
-    const fechaMostrada = document.getElementById('fecha-mostrada');
-    fechaMostrada.innerHTML = `Ranking de Puntualidad (tolerancia: 10 min)`;
-    
-    const thead = document.querySelector('#tabla-resultados thead');
-    thead.innerHTML = `
-        <tr>
-            <th>#</th>
-            <th>Empleado</th>
-            <th>DNI</th>
-            <th>Cargo</th>
-            <th>Turno</th>
-            <th>Tardanzas</th>
-            <th>Minutos tarde</th>
-            <th>Puntualidad</th>
-        </tr>
-    `;
     
     if (data.length === 0) {
         tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No hay datos en este período<\/td><\/tr>';
@@ -145,75 +246,6 @@ function actualizarTablaRanking(data) {
         
         html += `
             <tr>
-                <td>${idx + 1}<\/td>
-                <td>${emp.nombre} ${emp.apellido}<\/td>
-                <td>${emp.dni}<\/td>
-                <td>${emp.nombre_cargo}<\/td>
-                <td>${emp.nombre_turno}<\/td>
-                <td class="text-warning">${emp.total_tardanzas}<\/td>
-                <td class="text-danger">${emp.minutos_tarde}<\/td>
-                <td class="${clase}"><strong>${emp.puntualidad}%<\/strong><\/td>
-             \\
-        `;
-    });
-    tbody.innerHTML = html;
-}
-// =============================================
-// RANKING DE PUNTUALIDAD
-// =============================================
-
-function generarRankingPuntualidad() {
-    const fechaInicio = document.getElementById('ranking_fecha_inicio').value;
-    const fechaFin = document.getElementById('ranking_fecha_fin').value;
-
-    const tbody = document.getElementById('resultado-tbody');
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;"><i class="fa-solid fa-spinner fa-spin"></i> Cargando...<\/td><\/tr>';
-    document.getElementById('resultado-container').style.display = 'block';
-
-    fetch(`${BASE_URL}/reporte/rankingPuntualidad?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
-        .then(response => response.json())
-        .then(data => {
-            actualizarTablaRanking(data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Error al cargar los datos<\/td><\/tr>';
-        });
-}
-
-function actualizarTablaRanking(data) {
-    const tbody = document.getElementById('resultado-tbody');
-    const fechaMostrada = document.getElementById('fecha-mostrada');
-    fechaMostrada.innerHTML = 'Ranking de Puntualidad (tolerancia incluida)';
-
-    const thead = document.querySelector('#tabla-resultados thead');
-    thead.innerHTML = `
-        <tr>
-            <th>#</th>
-            <th>Empleado</th>
-            <th>DNI</th>
-            <th>Cargo</th>
-            <th>Turno</th>
-            <th>Tardanzas</th>
-            <th>Minutos tarde</th>
-            <th>Puntualidad</th>
-        </tr>
-    `;
-
-    if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No hay datos en este período<\/td><\/tr>';
-        return;
-    }
-
-    let html = '';
-    data.forEach((emp, idx) => {
-        let clase = '';
-        if (emp.puntualidad >= 95) clase = 'text-success';
-        else if (emp.puntualidad >= 80) clase = 'text-warning';
-        else clase = 'text-danger';
-
-        html += `
-            <tr>
                 <td>${idx + 1}</td>
                 <td>${emp.nombre} ${emp.apellido}</td>
                 <td>${emp.dni}</td>
@@ -222,7 +254,7 @@ function actualizarTablaRanking(data) {
                 <td class="text-warning">${emp.total_tardanzas}</td>
                 <td class="text-danger">${emp.minutos_tarde}</td>
                 <td class="${clase}"><strong>${emp.puntualidad}%</strong></td>
-            </tr>
+            <tr>
         `;
     });
     tbody.innerHTML = html;

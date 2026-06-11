@@ -3,8 +3,8 @@
 class ReporteController extends Controller
 {
     private $reporteModel;
-    
-    public function __construct() 
+
+    public function __construct()
     {
         require_once __DIR__ . '/../models/Reporte.php';
         $this->reporteModel = new Reporte();
@@ -83,19 +83,30 @@ class ReporteController extends Controller
 
     // Devuelve JSON para el reporte mensual
     public function resumenMensual(): void
-    {
-        if (!isset($_SESSION['usuario_id'])) {
-            http_response_code(401);
-            exit;
-        }
-        $mes = $_GET['mes'] ?? date('m');
-        $anio = $_GET['anio'] ?? date('Y');
-        $this->loadModel('Reporte');
-        $data = $this->Reporte->obtenerResumenMensual((int)$mes, (int)$anio);
-        header('Content-Type: application/json');
-        echo json_encode($data);
+{
+    if (!isset($_SESSION['usuario_id'])) {
+        http_response_code(401);
         exit;
     }
+
+    $mes = $_GET['mes'] ?? date('m');
+    $anio = $_GET['anio'] ?? date('Y');
+    $this->loadModel('Reporte');
+    $data = $this->Reporte->obtenerResumenMensual((int) $mes, (int) $anio);
+    
+    // LIMPIAR BARRAS
+    foreach ($data['datos'] as &$item) {
+        $item['nombre_cargo'] = str_replace('\\', '', $item['nombre_cargo']);
+        $item['nombre_turno'] = str_replace('\\', '', $item['nombre_turno']);
+        $item['nombre'] = str_replace('\\', '', $item['nombre']);
+        $item['apellido'] = str_replace('\\', '', $item['apellido']);
+    }
+    
+    header('Content-Type: application/json');
+    // ← ESTO ES LO IMPORTANTE
+    echo json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
     // Exportar Excel - Resumen Mensual (con justificadas)
     public function exportarExcelResumenMensual(): void
@@ -107,7 +118,7 @@ class ReporteController extends Controller
         $mes = $_GET['mes'] ?? date('m');
         $anio = $_GET['anio'] ?? date('Y');
         $this->loadModel('Reporte');
-        $data = $this->Reporte->obtenerResumenMensual((int)$mes, (int)$anio);
+        $data = $this->Reporte->obtenerResumenMensual((int) $mes, (int) $anio);
         $datos = $data['datos'];
         $nombreMes = $data['nombre_mes'];
         $diasLaborales = $data['dias_laborales'];
@@ -119,11 +130,15 @@ class ReporteController extends Controller
         echo "Días laborales del mes:\t$diasLaborales\n\n";
 
         foreach ($datos as $row) {
+            $nombreCargo = str_replace('\\', '', $row['nombre_cargo']);
+            $nombreTurno = str_replace('\\', '', $row['nombre_turno']);
+            $nombreEmpleado = str_replace('\\', '', $row['nombre'] . ' ' . $row['apellido']);
+
             echo $row['id_empleado'] . "\t";
-            echo $row['nombre'] . ' ' . $row['apellido'] . "\t";
+            echo $nombreEmpleado . "\t";
             echo $row['dni'] . "\t";
-            echo $row['nombre_cargo'] . "\t";
-            echo $row['nombre_turno'] . "\t";
+            echo $nombreCargo . "\t";
+            echo $nombreTurno . "\t";
             echo ($row['telefono'] ?? '—') . "\t";
             echo $row['asistio'] . "\t";
             echo $row['tardanzas'] . "\t";
@@ -144,7 +159,7 @@ class ReporteController extends Controller
         $mes = $_GET['mes'] ?? date('m');
         $anio = $_GET['anio'] ?? date('Y');
         $this->loadModel('Reporte');
-        $data = $this->Reporte->obtenerResumenMensual((int)$mes, (int)$anio);
+        $data = $this->Reporte->obtenerResumenMensual((int) $mes, (int) $anio);
         $datos = $data['datos'];
         $nombreMes = $data['nombre_mes'];
         $diasLaborales = $data['dias_laborales'];
@@ -190,9 +205,12 @@ class ReporteController extends Controller
                 <tbody>';
         foreach ($datos as $row) {
             $clase = '';
-            if ($row['porcentaje'] >= 90) $clase = 'text-success';
-            elseif ($row['porcentaje'] >= 70) $clase = 'text-warning';
-            else $clase = 'text-danger';
+            if ($row['porcentaje'] >= 90)
+                $clase = 'text-success';
+            elseif ($row['porcentaje'] >= 70)
+                $clase = 'text-warning';
+            else
+                $clase = 'text-danger';
             echo '<tr>
                 <td>' . $row['id_empleado'] . '</td>
                 <td>' . htmlspecialchars($row['nombre'] . ' ' . $row['apellido']) . '</td>
@@ -220,62 +238,62 @@ class ReporteController extends Controller
 // RANKING DE PUNTUALIDAD
 // =============================================
 
-// Devuelve JSON para el ranking
-public function rankingPuntualidad(): void
-{
-    if (!isset($_SESSION['usuario_id'])) {
-        http_response_code(401);
+    // Devuelve JSON para el ranking
+    public function rankingPuntualidad(): void
+    {
+        if (!isset($_SESSION['usuario_id'])) {
+            http_response_code(401);
+            exit;
+        }
+        $fechaInicio = $_GET['fecha_inicio'] ?? date('Y-m-01');
+        $fechaFin = $_GET['fecha_fin'] ?? date('Y-m-d');
+        $datos = $this->reporteModel->obtenerRankingPuntualidad($fechaInicio, $fechaFin);
+        header('Content-Type: application/json');
+        echo json_encode($datos);
         exit;
     }
-    $fechaInicio = $_GET['fecha_inicio'] ?? date('Y-m-01');
-    $fechaFin    = $_GET['fecha_fin'] ?? date('Y-m-d');
-    $datos = $this->reporteModel->obtenerRankingPuntualidad($fechaInicio, $fechaFin);
-    header('Content-Type: application/json');
-    echo json_encode($datos);
-    exit;
-}
 
-// Exportar Excel del Ranking de Puntualidad
-public function exportarExcelRankingPuntualidad(): void
-{
-    if (!isset($_SESSION['usuario_id'])) {
-        header('Location: ' . BASE_URL . '/login');
+    // Exportar Excel del Ranking de Puntualidad
+    public function exportarExcelRankingPuntualidad(): void
+    {
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL . '/login');
+            exit;
+        }
+        $fechaInicio = $_GET['fecha_inicio'] ?? date('Y-m-01');
+        $fechaFin = $_GET['fecha_fin'] ?? date('Y-m-d');
+        $datos = $this->reporteModel->obtenerRankingPuntualidad($fechaInicio, $fechaFin);
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename="ranking_puntualidad_' . $fechaInicio . '_a_' . $fechaFin . '.xls"');
+
+        echo "Posición\tEmpleado\tDNI\tCargo\tTurno\tTardanzas\tMinutos tarde\tPuntualidad (%)\n";
+        $pos = 1;
+        foreach ($datos as $row) {
+            echo $pos++ . "\t";
+            echo $row['nombre'] . ' ' . $row['apellido'] . "\t";
+            echo $row['dni'] . "\t";
+            echo $row['nombre_cargo'] . "\t";
+            echo $row['nombre_turno'] . "\t";
+            echo $row['total_tardanzas'] . "\t";
+            echo $row['minutos_tarde'] . "\t";
+            echo $row['puntualidad'] . "%\n";
+        }
         exit;
     }
-    $fechaInicio = $_GET['fecha_inicio'] ?? date('Y-m-01');
-    $fechaFin    = $_GET['fecha_fin'] ?? date('Y-m-d');
-    $datos = $this->reporteModel->obtenerRankingPuntualidad($fechaInicio, $fechaFin);
 
-    header('Content-Type: application/vnd.ms-excel');
-    header('Content-Disposition: attachment; filename="ranking_puntualidad_' . $fechaInicio . '_a_' . $fechaFin . '.xls"');
+    // Exportar PDF del Ranking de Puntualidad
+    public function exportarPDFRankingPuntualidad(): void
+    {
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL . '/login');
+            exit;
+        }
+        $fechaInicio = $_GET['fecha_inicio'] ?? date('Y-m-01');
+        $fechaFin = $_GET['fecha_fin'] ?? date('Y-m-d');
+        $datos = $this->reporteModel->obtenerRankingPuntualidad($fechaInicio, $fechaFin);
 
-    echo "Posición\tEmpleado\tDNI\tCargo\tTurno\tTardanzas\tMinutos tarde\tPuntualidad (%)\n";
-    $pos = 1;
-    foreach ($datos as $row) {
-        echo $pos++ . "\t";
-        echo $row['nombre'] . ' ' . $row['apellido'] . "\t";
-        echo $row['dni'] . "\t";
-        echo $row['nombre_cargo'] . "\t";
-        echo $row['nombre_turno'] . "\t";
-        echo $row['total_tardanzas'] . "\t";
-        echo $row['minutos_tarde'] . "\t";
-        echo $row['puntualidad'] . "%\n";
-    }
-    exit;
-}
-
-// Exportar PDF del Ranking de Puntualidad
-public function exportarPDFRankingPuntualidad(): void
-{
-    if (!isset($_SESSION['usuario_id'])) {
-        header('Location: ' . BASE_URL . '/login');
-        exit;
-    }
-    $fechaInicio = $_GET['fecha_inicio'] ?? date('Y-m-01');
-    $fechaFin    = $_GET['fecha_fin'] ?? date('Y-m-d');
-    $datos = $this->reporteModel->obtenerRankingPuntualidad($fechaInicio, $fechaFin);
-
-    echo '<!DOCTYPE html>
+        echo '<!DOCTYPE html>
     <html>
     <head>
         <meta charset="UTF-8">
@@ -305,13 +323,16 @@ public function exportarPDFRankingPuntualidad(): void
                 </tr>
             </thead>
             <tbody>';
-    $pos = 1;
-    foreach ($datos as $row) {
-        $clase = '';
-        if ($row['puntualidad'] >= 95) $clase = 'text-success';
-        elseif ($row['puntualidad'] >= 80) $clase = 'text-warning';
-        else $clase = 'text-danger';
-        echo '<tr>
+        $pos = 1;
+        foreach ($datos as $row) {
+            $clase = '';
+            if ($row['puntualidad'] >= 95)
+                $clase = 'text-success';
+            elseif ($row['puntualidad'] >= 80)
+                $clase = 'text-warning';
+            else
+                $clase = 'text-danger';
+            echo '<tr>
             <td>' . $pos++ . '</td>
             <td>' . htmlspecialchars($row['nombre'] . ' ' . $row['apellido']) . '</td>
             <td>' . $row['dni'] . '</td>
@@ -321,8 +342,8 @@ public function exportarPDFRankingPuntualidad(): void
             <td class="text-danger">' . $row['minutos_tarde'] . '</td>
             <td class="' . $clase . '">' . $row['puntualidad'] . '%</td>
         </tr>';
-    }
-    echo '</tbody>
+        }
+        echo '</tbody>
         </table>
         <div class="resumen">
             <strong>Nota:</strong> La puntualidad se calcula sobre días laborables (lunes a sábado).<br>
@@ -330,7 +351,7 @@ public function exportarPDFRankingPuntualidad(): void
         </div>
     </body>
     </html>';
-    exit;
-}
+        exit;
+    }
 }
 ?>

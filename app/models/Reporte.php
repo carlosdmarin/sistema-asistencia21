@@ -1,10 +1,10 @@
 <?php
 // app/models/Reporte.php
 
-class Reporte extends Model 
+class Reporte extends Model
 {
     // Obtener asistencias por fecha específica
-    public function getAsistenciaPorFecha(string $fecha): array 
+    public function getAsistenciaPorFecha(string $fecha): array
     {
         $sql = "SELECT 
                     e.id_empleado, e.nombre, e.apellido, e.dni,
@@ -20,16 +20,17 @@ class Reporte extends Model
                 INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
                 LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado AND a.fecha = :fecha
                 ORDER BY e.apellido, e.nombre";
-        
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':fecha' => $fecha]);
         return $stmt->fetchAll();
     }
-        public function obtenerResumenMensual(int $mes, int $anio): array
-{
-    $diasLaborales = $this->calcularDiasLaborales($mes, $anio);
-    
-    $stmt = $this->pdo->prepare("
+    public function obtenerResumenMensual(int $mes, int $anio): array
+    {
+
+        $diasLaborales = $this->calcularDiasLaborales($mes, $anio);
+
+        $stmt = $this->pdo->prepare("
         SELECT 
         e.id_empleado, e.nombre, e.apellido, e.dni, e.telefono,
         c.nombre_cargo, t.nombre_turno,
@@ -46,53 +47,60 @@ class Reporte extends Model
     GROUP BY e.id_empleado
     ORDER BY e.apellido, e.nombre
     ");
-    $stmt->execute(['mes' => $mes, 'anio' => $anio]);
-    $datos = $stmt->fetchAll();
-    
-    foreach ($datos as &$row) {
-        $presente = $row['asistio'] + $row['tardanzas'];
-        $row['porcentaje'] = $diasLaborales > 0 ? round(($presente / $diasLaborales) * 100) : 0;
+        $stmt->execute(['mes' => $mes, 'anio' => $anio]);
+        $datos = $stmt->fetchAll();
+
+        foreach ($datos as &$row) {
+            $presente = $row['asistio'] + $row['tardanzas'];
+            $row['porcentaje'] = $diasLaborales > 0 ? round(($presente / $diasLaborales) * 100) : 0;
+        }
+        foreach ($datos as &$row) {
+            $row['nombre_cargo'] = str_replace('\\', '', $row['nombre_cargo']);
+            $row['nombre_turno'] = str_replace('\\', '', $row['nombre_turno']);
+            $row['nombre'] = str_replace('\\', '', $row['nombre']);
+            $row['apellido'] = str_replace('\\', '', $row['apellido']);
+        }
+
+        return [
+            'datos' => $datos,
+            'dias_laborales' => $diasLaborales,
+            'mes' => $mes,
+            'anio' => $anio,
+            'nombre_mes' => $this->getNombreMes($mes)
+        ];
     }
-    
-    return [
-        'datos' => $datos,
-        'dias_laborales' => $diasLaborales,
-        'mes' => $mes,
-        'anio' => $anio,
-        'nombre_mes' => $this->getNombreMes($mes)
-    ];
-}
 
-private function calcularDiasLaborales(int $mes, int $anio): int
-{
-    $fecha = new DateTime("$anio-$mes-01");
-    $totalDias = $fecha->format('t');
-    $diasLaborales = 0;
-    for ($i = 1; $i <= $totalDias; $i++) {
-        $diaSemana = (int)(new DateTime("$anio-$mes-$i"))->format('N');
-        if ($diaSemana <= 6) $diasLaborales++;
+    private function calcularDiasLaborales(int $mes, int $anio): int
+    {
+        $fecha = new DateTime("$anio-$mes-01");
+        $totalDias = $fecha->format('t');
+        $diasLaborales = 0;
+        for ($i = 1; $i <= $totalDias; $i++) {
+            $diaSemana = (int) (new DateTime("$anio-$mes-$i"))->format('N');
+            if ($diaSemana <= 6)
+                $diasLaborales++;
+        }
+        return $diasLaborales;
     }
-    return $diasLaborales;
-}
 
-private function getNombreMes(int $mes): string
-{
-    $meses = [1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'];
-    return $meses[$mes];
-}
+    private function getNombreMes(int $mes): string
+    {
+        $meses = [1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'];
+        return $meses[$mes];
+    }
 
-/**
- * Ranking de puntualidad considerando tolerancia por turno
- * @param string $fechaInicio Y-m-d
- * @param string $fechaFin    Y-m-d
- * @return array
- */
-public function obtenerRankingPuntualidad(string $fechaInicio, string $fechaFin): array
-{
-    // Días laborables en el rango (lunes a sábado)
-    $diasLaborables = $this->calcularDiasLaborablesEnRango($fechaInicio, $fechaFin);
+    /**
+     * Ranking de puntualidad considerando tolerancia por turno
+     * @param string $fechaInicio Y-m-d
+     * @param string $fechaFin    Y-m-d
+     * @return array
+     */
+    public function obtenerRankingPuntualidad(string $fechaInicio, string $fechaFin): array
+    {
+        // Días laborables en el rango (lunes a sábado)
+        $diasLaborables = $this->calcularDiasLaborablesEnRango($fechaInicio, $fechaFin);
 
-    $sql = "
+        $sql = "
         SELECT 
             e.id_empleado,
             e.nombre,
@@ -121,40 +129,41 @@ public function obtenerRankingPuntualidad(string $fechaInicio, string $fechaFin)
         ORDER BY total_tardanzas ASC, minutos_tarde ASC
     ";
 
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->execute([
-        ':fechaInicio' => $fechaInicio,
-        ':fechaFin'    => $fechaFin
-    ]);
-    $datos = $stmt->fetchAll();
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':fechaInicio' => $fechaInicio,
+            ':fechaFin' => $fechaFin
+        ]);
+        $datos = $stmt->fetchAll();
 
-    foreach ($datos as &$row) {
-        $diasConTardanza = $row['total_tardanzas'];
-        $row['puntualidad'] = ($diasLaborables > 0)
-            ? round((($diasLaborables - $diasConTardanza) / $diasLaborables) * 100)
-            : 100;
-        $row['dias_laborables'] = $diasLaborables;
+        foreach ($datos as &$row) {
+            $diasConTardanza = $row['total_tardanzas'];
+            $row['puntualidad'] = ($diasLaborables > 0)
+                ? round((($diasLaborables - $diasConTardanza) / $diasLaborables) * 100)
+                : 100;
+            $row['dias_laborables'] = $diasLaborables;
+        }
+
+        return $datos;
     }
 
-    return $datos;
-}
-
-/**
- * Calcula días laborables (lunes a sábado) en un rango de fechas
- */
-private function calcularDiasLaborablesEnRango(string $inicio, string $fin): int
-{
-    $start = new DateTime($inicio);
-    $end   = new DateTime($fin);
-    $end->modify('+1 day');
-    $interval = new DateInterval('P1D');
-    $periodo = new DatePeriod($start, $interval, $end);
-    $dias = 0;
-    foreach ($periodo as $fecha) {
-        $diaSemana = (int) $fecha->format('N');
-        if ($diaSemana <= 6) $dias++;
+    /**
+     * Calcula días laborables (lunes a sábado) en un rango de fechas
+     */
+    private function calcularDiasLaborablesEnRango(string $inicio, string $fin): int
+    {
+        $start = new DateTime($inicio);
+        $end = new DateTime($fin);
+        $end->modify('+1 day');
+        $interval = new DateInterval('P1D');
+        $periodo = new DatePeriod($start, $interval, $end);
+        $dias = 0;
+        foreach ($periodo as $fecha) {
+            $diaSemana = (int) $fecha->format('N');
+            if ($diaSemana <= 6)
+                $dias++;
+        }
+        return $dias;
     }
-    return $dias;
-}
 
 }

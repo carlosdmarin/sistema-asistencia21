@@ -13,14 +13,14 @@
 
 <div align="center">
 
-### ⚙️ Backend & Base de Datos
+### ▶ Backend & Base de Datos
 
 ![Database](https://img.shields.io/badge/Base%20de%20Datos-MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
 ![MVC](https://img.shields.io/badge/Arquitectura-MVC-8B5CF6?style=for-the-badge)
 ![POO](https://img.shields.io/badge/Paradigma-POO-EC4899?style-for-the-badge)
 ![CRON](https://img.shields.io/badge/Automatización-CRON-22C55E?style=for-the-badge)
 
-### 🎨 Frontend
+### Frontend
 
 ![AJAX](https://img.shields.io/badge/AJAX-En%20vivo-06B6D4?style=for-the-badge)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
@@ -32,7 +32,7 @@
 ![Google Fonts](https://img.shields.io/badge/Google%20Fonts-Poppins-4285F4?style=for-the-badge&logo=googlefonts&logoColor=white)
 
 
-### 🛠️ Herramientas de Desarrollo
+### Herramientas de Desarrollo
 
 ![Visual Studio Code](https://img.shields.io/badge/VS%20Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)
 ![XAMPP](https://img.shields.io/badge/XAMPP-8.2-FB7A24?style=for-the-badge&logo=xampp&logoColor=white)
@@ -45,18 +45,18 @@
 ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 ![Draw.io](https://img.shields.io/badge/Draw.io-F08705?style=for-the-badge&logo=diagramsdotnet&logoColor=white)
 
-### 🔐 Seguridad
+###  Seguridad
 
 ![Security](https://img.shields.io/badge/Seguridad-Prepared%20Statements-22C55E?style=for-the-badge)
 ![Encryption](https://img.shields.io/badge/Contraseñas-Bcrypt-22C55E?style=for-the-badge)
 
-### 📊 Métricas del Proyecto
+###  Métricas del Proyecto
 
 ![GitHub followers](https://img.shields.io/github/followers/carlosdmarin?style=for-the-badge&logo=github&color=181717)
 ![GitHub stars](https://img.shields.io/github/stars/carlosdmarin/SISTEMA-ASISTENCIA?style=for-the-badge&logo=github&color=FFD700)
 ![GitHub forks](https://img.shields.io/github/forks/carlosdmarin/SISTEMA-ASISTENCIA?style=for-the-badge&logo=github&color=4F5B93)
 
-### 👤 Autor
+###  Autor
 
 ![Autor](https://img.shields.io/badge/Autor-Carlos%20Marín-22C55E?style=for-the-badge)
 ![Fecha](https://img.shields.io/badge/Fecha-2026-FFD700?style=for-the-badge)
@@ -72,7 +72,7 @@ Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES*
 
 ---
 
-## 🚨 El Problema
+##  El Problema
 
 | # | Problema | Consecuencia |
 |---|----------|--------------|
@@ -105,7 +105,7 @@ Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES*
 
 ---
 
-## 🛠️ Stack Tecnológico
+##  Stack Tecnológico
 
 | Herramienta | Versión | Uso |
 |-------------|---------|-----|
@@ -124,7 +124,7 @@ Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES*
 
 ---
 
-## 🧱 Arquitectura MVC
+##  Arquitectura MVC
 
 El sistema sigue el patrón **Modelo – Vista – Controlador** implementado desde cero en PHP puro, sin frameworks.
 
@@ -197,7 +197,7 @@ DB_PASS=
 http://localhost/SISTEMA-ASISTENCIA
 ```
 
-> 🔑 **Credenciales por defecto:** usuario `admin` / contraseña `admin123`
+>  **Credenciales por defecto:** usuario `admin` / contraseña `admin123`
 
 ---
 
@@ -221,7 +221,7 @@ Abrir: taskschd.msc → Crear tarea básica
 
 ---
 
-## 📊 Base de Datos
+##  Base de Datos
 
 ### Script SQL
 
@@ -313,7 +313,7 @@ CREATE TABLE JUSTIFICACION (
 
 ---
 
-## 📸 Capturas de Pantalla
+##  Capturas de Pantalla
 
 | Dashboard | Asistencia con Lector |
 |:---------:|:---------------------:|
@@ -341,23 +341,23 @@ CREATE TABLE JUSTIFICACION (
 
 ---
 
-## 🗂️ Gestión del Proyecto
+##  Gestión del Proyecto
 
 Este proyecto se gestionó con **metodología ágil** usando Trello y se diseñó con un prototipo en Figma antes de implementar.
 
 | Herramienta | Enlace |
 |-------------|--------|
-| 📋 Tablero Trello | [Ver tablero](https://trello.com/b/YEKBDLXE/sistema-asistencia) |
-| 🎨 Prototipo Figma | [Ver diseño](https://www.figma.com/design/VoClaSs4Tfc3ZZ3iVfCmuU/PROYECTO-ASISTENCIA?node-id=41-1559&t=BYIrH7qSuvFSXNrC-0) |
+|  Tablero Trello | [Ver tablero](https://trello.com/b/YEKBDLXE/sistema-asistencia) |
+|  Prototipo Figma | [Ver diseño](https://www.figma.com/design/VoClaSs4Tfc3ZZ3iVfCmuU/PROYECTO-ASISTENCIA?node-id=41-1559&t=BYIrH7qSuvFSXNrC-0) |
 
 ---
 
-## 👥 Autores
+##  Autores
 
 | Nombre | Rol | Contacto |
 |--------|-----|----------|
 | **Carlos Marín** | Desarrollo completo | [GitHub](https://github.com/carlosdmarin) |
-| **MOTO-CARS INVERSIONES** | Cliente / Caso de estudio | — |
+| **MOTO-CARS INVERSIONES** | Cliente / Caso de estudio | 931297608 |
 
 ---
 

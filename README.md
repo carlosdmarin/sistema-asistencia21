@@ -88,7 +88,7 @@ Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES*
 
 ---
 
-## ✅ La Solución
+##  La Solución
 
 | Módulo | Descripción |
 |--------|-------------|

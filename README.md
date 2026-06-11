@@ -30,6 +30,8 @@
 ![SweetAlert2](https://img.shields.io/badge/SweetAlert2-11.0-6B46C1?style=for-the-badge&logo=javascript&logoColor=white)
 ![FontAwesome](https://img.shields.io/badge/FontAwesome-6.5-528DD7?style=for-the-badge&logo=fontawesome&logoColor=white)
 ![Google Fonts](https://img.shields.io/badge/Google%20Fonts-Poppins-4285F4?style=for-the-badge&logo=googlefonts&logoColor=white)
+[![Uiverse](https://img.shields.io/badge/Uiverse-UI%20Components-6C63FF?style=for-the-badge)](https://uiverse.io/)
+
 
 
 ### Herramientas de Desarrollo

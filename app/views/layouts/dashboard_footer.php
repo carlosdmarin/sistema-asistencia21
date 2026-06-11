@@ -114,11 +114,12 @@ function formatFecha(fecha) {
     return `${partes[2]}/${partes[1]}/${partes[0]}`;
 }
 </script>
-<script>
-    const BASE_URL = '<?php echo BASE_URL; ?>';
-</script>
+
+
     <script src="<?php echo BASE_URL; ?>/public/js/dashboard.js"></script>
     <script src="<?php echo BASE_URL; ?>/public/js/reporte.js"></script>
+
+
     
 </body>
 </html>

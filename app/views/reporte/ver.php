@@ -30,107 +30,80 @@
             </div>
         </div>
 
-        <!-- CARD 2: Reporte de Tardanzas -->
+        <!-- CARD: Ranking de Puntualidad -->
         <div class="report-card">
             <div class="card-icon">
-                <i class="fa-solid fa-clock"></i>
+                <i class="fa-solid fa-trophy"></i>
             </div>
-            <h3>Reporte de Tardanzas</h3>
-            <p>Ranking de empleados que más llegan tarde. Detalle por día y minutos acumulados.</p>
-
+            <h3>Ranking de Puntualidad</h3>
+            <p>Empleados más puntuales (considera tolerancia por turno).</p>
             <div class="card-filtro">
-                <label>Tipo de Reporte</label>
-                <select id="tipo_reporte">
-                    <option value="diario">📅 Diario</option>
-                    <option value="semanal" selected>📆 Semanal</option>
-                    <option value="mensual">📊 Mensual</option>
-                </select>
+                <label>Fecha Inicio</label>
+                <input type="date" id="ranking_fecha_inicio" value="<?php echo date('Y-m-01'); ?>">
             </div>
-
-            <div class="card-filtro" id="filtro-fecha">
-                <label>Seleccionar Fecha</label>
-                <input type="date" id="fecha_tardanza" value="<?php echo date('Y-m-d'); ?>">
+            <div class="card-filtro">
+                <label>Fecha Fin</label>
+                <input type="date" id="ranking_fecha_fin" value="<?php echo date('Y-m-d'); ?>">
             </div>
-
-            <div class="card-filtro" id="filtro-semana" style="display: none;">
-                <label>Seleccionar Semana</label>
-                <input type="week" id="semana_tardanza" value="<?php echo date('Y-\WW'); ?>">
-            </div>
-
-            <div class="card-filtro" id="filtro-mes" style="display: none;">
-                <label>Seleccionar Mes</label>
-                <input type="month" id="mes_tardanza" value="<?php echo date('Y-m'); ?>">
-            </div>
-
             <div class="card-buttons">
-                <button class="btn-generar" onclick="generarReporteTardanzas()">
-                    <i class="fa-solid fa-magnifying-glass"></i> Generar
+                <button class="btn-generar" onclick="generarRankingPuntualidad()">
+                    <i class="fa-solid fa-chart-line"></i> Generar
                 </button>
-                <button class="btn-excel" onclick="exportarExcelTardanzas()">
+                <button class="btn-excel" onclick="exportarExcelRankingPuntualidad()">
                     <i class="fa-solid fa-file-excel"></i> Excel
                 </button>
-                <button class="btn-pdf" onclick="exportarPDFTardanzas()">
+                <button class="btn-pdf" onclick="exportarPDFRankingPuntualidad()">
                     <i class="fa-solid fa-file-pdf"></i> PDF
                 </button>
             </div>
         </div>
-        <!-- CARD 3: Faltas (próximamente) -->
-        <div class="report-card coming-soon">
-            <div class="card-icon">
-                <i class="fa-solid fa-user-slash"></i>
-            </div>
-            <h3>Reporte de Faltas</h3>
-            <p>Empleados que faltaron en un período</p>
-            <div class="badge-proximamente">Próximamente</div>
-        </div>
 
-        <!-- CARD 4: Resumen Mensual (próximamente) -->
         <!-- CARD 4: Resumen Mensual -->
-<div class="report-card">
-    <div class="card-icon">
-        <i class="fa-solid fa-chart-simple"></i>
-    </div>
-    <h3>Resumen Mensual</h3>
-    <p>Estadísticas por empleado por mes (asistencias, tardanzas, faltas)</p>
+        <div class="report-card">
+            <div class="card-icon">
+                <i class="fa-solid fa-chart-simple"></i>
+            </div>
+            <h3>Resumen Mensual</h3>
+            <p>Estadísticas por empleado por mes (asistencias, tardanzas, faltas)</p>
 
-    <div class="card-filtro">
-        <label>Seleccionar Mes</label>
-        <select id="mes_resumen">
-            <option value="1">Enero</option>
-            <option value="2">Febrero</option>
-            <option value="3">Marzo</option>
-            <option value="4">Abril</option>
-            <option value="5">Mayo</option>
-            <option value="6" selected>Junio</option>
-            <option value="7">Julio</option>
-            <option value="8">Agosto</option>
-            <option value="9">Septiembre</option>
-            <option value="10">Octubre</option>
-            <option value="11">Noviembre</option>
-            <option value="12">Diciembre</option>
-        </select>
-    </div>
-    <div class="card-filtro">
-        <label>Seleccionar Año</label>
-        <select id="anio_resumen">
-            <option value="2024">2024</option>
-            <option value="2025">2025</option>
-            <option value="2026" selected>2026</option>
-        </select>
-    </div>
+            <div class="card-filtro">
+                <label>Seleccionar Mes</label>
+                <select id="mes_resumen">
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6" selected>Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+            </div>
+            <div class="card-filtro">
+                <label>Seleccionar Año</label>
+                <select id="anio_resumen">
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026" selected>2026</option>
+                </select>
+            </div>
 
-    <div class="card-buttons">
-        <button class="btn-generar" onclick="generarResumenMensual()">
-            <i class="fa-solid fa-chart-simple"></i> Generar
-        </button>
-        <button class="btn-excel" onclick="exportarExcelResumenMensual()">
-            <i class="fa-solid fa-file-excel"></i> Excel
-        </button>
-        <button class="btn-pdf" onclick="exportarPDFResumenMensual()">
-            <i class="fa-solid fa-file-pdf"></i> PDF
-        </button>
-    </div>
-</div>
+            <div class="card-buttons">
+                <button class="btn-generar" onclick="generarResumenMensual()">
+                    <i class="fa-solid fa-chart-simple"></i> Generar
+                </button>
+                <button class="btn-excel" onclick="exportarExcelResumenMensual()">
+                    <i class="fa-solid fa-file-excel"></i> Excel
+                </button>
+                <button class="btn-pdf" onclick="exportarPDFResumenMensual()">
+                    <i class="fa-solid fa-file-pdf"></i> PDF
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Tabla de Resultados (se muestra después de generar) -->

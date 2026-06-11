@@ -123,40 +123,33 @@ class Asistencia extends Model
     }
     // Obtener empleados con asistencia y justificacion para ajax 
     public function obtenerDatosAsistencia(string $fecha): array
+{
+    $stmt = $this->pdo->prepare("
+        SELECT 
+            e.id_empleado, e.nombre, e.apellido, e.dni,
+            c.nombre_cargo, t.nombre_turno,
+            a.hora_entrada, a.hora_salida, 
+            COALESCE(a.estado, 'sin_marcar') as estado,
+            CASE WHEN j.id_justificacion IS NOT NULL THEN 1 ELSE 0 END as justificado
+        FROM EMPLEADO e 
+        INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
+        INNER JOIN TURNO t ON e.id_turno = t.id_turno 
+        LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado AND a.fecha = :fecha
+        LEFT JOIN JUSTIFICACION j ON a.id_asistencia = j.id_asistencia
+        ORDER BY e.apellido, e.nombre
+    ");
+
+    $stmt->execute(['fecha' => $fecha]);
+    $empleados = $stmt->fetchAll();
+    
+    
+    return $empleados;
+}
+    // Marcar falta a los empleados sin registro (DESPUÉS de que terminó el turno)
+    public function marcarFaltasAutomaticas(string $fecha): int
     {
 
         $stmt = $this->pdo->prepare("
-        SELECT 
-                e.id_empleado, e.nombre, e.apellido, e.dni,
-                c.nombre_cargo, t.nombre_turno,
-                a.hora_entrada, a.hora_salida, 
-                COALESCE(a.estado, 'sin_marcar') as estado,
-                CASE WHEN j.id_justificacion IS NOT NULL THEN 1 ELSE 0 END as justificado
-            FROM EMPLEADO e 
-            INNER JOIN CARGO c ON e.id_cargo = c.id_cargo 
-            INNER JOIN TURNO t ON e.id_turno = t.id_turno 
-            LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado AND a.fecha = :fecha
-            LEFT JOIN JUSTIFICACION j ON a.id_asistencia = j.id_asistencia
-            ORDER BY e.apellido, e.nombre
-        ");
-
-        $stmt->execute(['fecha' => $fecha]);
-        $empleados = $stmt->fetchAll();
-
-        // LIMPIAR BARRAS DE LOS NOMBRES
-        foreach ($empleados as &$emp) {
-            $emp['nombre'] = str_replace('\\', '', $emp['nombre']);
-            $emp['apellido'] = str_replace('\\', '', $emp['apellido']);
-            $emp['nombre_cargo'] = str_replace('\\', '', $emp['nombre_cargo']);
-            $emp['nombre_turno'] = str_replace('\\', '', $emp['nombre_turno']);
-        }
-        return $empleados;
-    }
-
-    // Marcar falta a los empleados sin registro (DESPUÉS de que terminó el turno)
-    public function marcarFaltasAutomaticas(string $fecha): int{ 
-    
-    $stmt = $this->pdo->prepare("
         INSERT INTO ASISTENCIA (id_empleado, fecha, estado)
         SELECT e.id_empleado, :fecha, 'falto'
         FROM EMPLEADO e 
@@ -166,21 +159,22 @@ class Asistencia extends Model
         )
         AND NOW() > CONCAT(:fecha, ' ', t.hora_salida)
     ");
-    
-    $stmt->execute(['fecha' => $fecha]);
-    $contador = $stmt->rowCount();
-    
-    if ($contador > 0) {
-        error_log("Faltas automáticas marcadas: $contador para fecha $fecha");
+
+        $stmt->execute(['fecha' => $fecha]);
+        $contador = $stmt->rowCount();
+
+        if ($contador > 0) {
+            error_log("Faltas automáticas marcadas: $contador para fecha $fecha");
+        }
+
+        return $contador;
     }
-    
-    return $contador;
-}
 
     // Marcar salidas automaticamente para los que olvidaron marcar salida (DESPUÉS del turno)
-    public function marcarSalidasAutomaticas(string $fecha): int {
+    public function marcarSalidasAutomaticas(string $fecha): int
+    {
 
-    $stmt = $this->pdo->prepare("
+        $stmt = $this->pdo->prepare("
         UPDATE ASISTENCIA a
         INNER JOIN EMPLEADO e ON a.id_empleado = e.id_empleado
         INNER JOIN TURNO t ON e.id_turno = t.id_turno
@@ -191,16 +185,16 @@ class Asistencia extends Model
           AND a.estado IN ('asistio', 'tardanza')
           AND NOW() > CONCAT(:fecha, ' ', t.hora_salida)
     ");
-    
-    $stmt->execute(['fecha' => $fecha]);
-    $contador = $stmt->rowCount();
-    
-    if ($contador > 0) {
-        error_log("Salidas automáticas marcadas: $contador para fecha $fecha");
+
+        $stmt->execute(['fecha' => $fecha]);
+        $contador = $stmt->rowCount();
+
+        if ($contador > 0) {
+            error_log("Salidas automáticas marcadas: $contador para fecha $fecha");
+        }
+
+        return $contador;
     }
-    
-    return $contador;
-}
 
     // Justificar una falta 
     public function justificarFalta(int $idEmpleado, string $fecha, string $motivo, int $idUsuario): array

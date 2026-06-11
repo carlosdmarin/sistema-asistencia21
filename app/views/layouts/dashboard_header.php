@@ -193,7 +193,10 @@ $urlActual = $_GET['url'] ?? '';
             </a>
         </div>
     </aside>
-    <?php include __DIR__ . '/dashboard_footer.php' ?>
     <!-- CONTENIDO PRINCIPAL - EL main SE ABRE PERO NO SE CIERRA AQUÍ -->
     <main class="main-content" id="mainContent">
         <!-- EL CONTENIDO DE CADA VISTA SE INSERTA AQUÍ AUTOMÁTICAMENTE -->
+         <script>
+            const BASE_URL = '<?php echo BASE_URL; ?>';
+            const FECHA_SERVIDOR = '<?php echo date('Y-m-d'); ?>';
+        </script>

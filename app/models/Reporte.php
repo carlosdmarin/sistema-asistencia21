@@ -81,4 +81,80 @@ private function getNombreMes(int $mes): string
     return $meses[$mes];
 }
 
+/**
+ * Ranking de puntualidad considerando tolerancia por turno
+ * @param string $fechaInicio Y-m-d
+ * @param string $fechaFin    Y-m-d
+ * @return array
+ */
+public function obtenerRankingPuntualidad(string $fechaInicio, string $fechaFin): array
+{
+    // Días laborables en el rango (lunes a sábado)
+    $diasLaborables = $this->calcularDiasLaborablesEnRango($fechaInicio, $fechaFin);
+
+    $sql = "
+        SELECT 
+            e.id_empleado,
+            e.nombre,
+            e.apellido,
+            e.dni,
+            c.nombre_cargo,
+            t.nombre_turno,
+            COUNT(CASE WHEN a.estado = 'tardanza' THEN 1 END) AS total_tardanzas,
+            COALESCE(SUM(
+                GREATEST(
+                    0,
+                    TIMESTAMPDIFF(MINUTE, 
+                        ADDTIME(t.hora_inicio, t.tolerancia_minutos), 
+                        a.hora_entrada
+                    )
+                )
+            ), 0) AS minutos_tarde
+        FROM EMPLEADO e
+        INNER JOIN CARGO c ON e.id_cargo = c.id_cargo
+        INNER JOIN TURNO t ON e.id_turno = t.id_turno
+        LEFT JOIN ASISTENCIA a ON e.id_empleado = a.id_empleado
+            AND a.fecha BETWEEN :fechaInicio AND :fechaFin
+            AND a.estado IN ('asistio', 'tardanza')
+        GROUP BY e.id_empleado
+        HAVING total_tardanzas > 0 OR COUNT(a.id_asistencia) > 0
+        ORDER BY total_tardanzas ASC, minutos_tarde ASC
+    ";
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([
+        ':fechaInicio' => $fechaInicio,
+        ':fechaFin'    => $fechaFin
+    ]);
+    $datos = $stmt->fetchAll();
+
+    foreach ($datos as &$row) {
+        $diasConTardanza = $row['total_tardanzas'];
+        $row['puntualidad'] = ($diasLaborables > 0)
+            ? round((($diasLaborables - $diasConTardanza) / $diasLaborables) * 100)
+            : 100;
+        $row['dias_laborables'] = $diasLaborables;
+    }
+
+    return $datos;
+}
+
+/**
+ * Calcula días laborables (lunes a sábado) en un rango de fechas
+ */
+private function calcularDiasLaborablesEnRango(string $inicio, string $fin): int
+{
+    $start = new DateTime($inicio);
+    $end   = new DateTime($fin);
+    $end->modify('+1 day');
+    $interval = new DateInterval('P1D');
+    $periodo = new DatePeriod($start, $interval, $end);
+    $dias = 0;
+    foreach ($periodo as $fecha) {
+        $diaSemana = (int) $fecha->format('N');
+        if ($diaSemana <= 6) $dias++;
+    }
+    return $dias;
+}
+
 }

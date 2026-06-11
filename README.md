@@ -13,7 +13,7 @@
 
 <div align="center">
 
-### ▶ Backend & Base de Datos
+###  Backend & Base de Datos
 
 ![Database](https://img.shields.io/badge/Base%20de%20Datos-MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
 ![MVC](https://img.shields.io/badge/Arquitectura-MVC-8B5CF6?style=for-the-badge)
@@ -39,7 +39,7 @@
 ![Git](https://img.shields.io/badge/Git-2.4-F05032?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
 
-### 📋 Gestión del Proyecto
+###  Gestión del Proyecto
 
 ![Trello](https://img.shields.io/badge/Trello-0052CC?style=for-the-badge&logo=trello&logoColor=white)
 ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
@@ -83,7 +83,7 @@ Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES*
 | 5 | Sin justificaciones | No quedaba registro de faltas por motivos de salud |
 | 6 | Reportes manuales | Generarlos tomaba horas y siempre tenían errores |
 
-> 💬 *"Un sistema sencillo donde los empleados marquen su entrada y salida con su DNI, que me avise quién llega tarde, que me calcule las faltas solo, y que me genere reportes sin que yo tenga que hacer cuentas a mano."*
+>  *"Un sistema sencillo donde los empleados marquen su entrada y salida con su DNI, que me avise quién llega tarde, que me calcule las faltas solo, y que me genere reportes sin que yo tenga que hacer cuentas a mano."*
 > — Dueño de MOTO-CARS INVERSIONES
 
 ---
@@ -157,7 +157,7 @@ SISTEMA-ASISTENCIA/
 
 ---
 
-## ⚙️ Instalación
+##  Instalación
 
 ### Requisitos previos
 
@@ -201,16 +201,16 @@ http://localhost/SISTEMA-ASISTENCIA
 
 ---
 
-### ⏱️ Configuración del CRON (Tareas Automáticas)
+###  Configuración del CRON (Tareas Automáticas)
 
-**🍎 Mac / Linux**
+** Mac / Linux**
 ```bash
 crontab -e
 # Agregar la siguiente línea (ejecuta todos los días a las 6:00 PM):
 0 18 * * * /Applications/XAMPP/bin/php /ruta/a/SISTEMA-ASISTENCIA/cron_asistencia.php
 ```
 
-**🪟 Windows (Programador de tareas)**
+** Windows (Programador de tareas)**
 ```
 Abrir: taskschd.msc → Crear tarea básica
   - Nombre:      Sistema Asistencias
@@ -326,9 +326,9 @@ CREATE TABLE JUSTIFICACION (
 
 ---
 
-## 📈 Logros del Proyecto
+##  Logros del Proyecto
 
-| ✅ Logro | Descripción |
+|  Logro | Descripción |
 |---------|-------------|
 | **100% funcional** | Todos los módulos están operativos |
 | **MVC desde cero** | Sin frameworks: código limpio, ordenado y escalable |
@@ -361,26 +361,26 @@ Este proyecto se gestionó con **metodología ágil** usando Trello y se diseñ�
 
 ---
 
-## 📄 Licencia
+##  Licencia
 
 Este proyecto está bajo la licencia **MIT**.
 Puedes usarlo, modificarlo y distribuirlo libremente.
 
 ---
 
-## 📬 Contacto
+##  Contacto
 
 | Medio | Enlace |
 |-------|--------|
-| 📩 Email | carlosdmarin@email.com |
-| 🔗 GitHub | [github.com/carlosdmarin](https://github.com/carlosdmarin) |
-| 💼 LinkedIn | [linkedin.com/in/carlosdmarin](https://linkedin.com/in/carlosdmarin) |
+|  Email | carlosdmarin@email.com |
+|  GitHub | [github.com/carlosdmarin](https://github.com/carlosdmarin) |
+|  LinkedIn | [linkedin.com/in/carlosdmarin](https://linkedin.com/in/carlosdmarin) |
 
 ---
 
 <div align="center">
 
-⭐ **Si este proyecto te fue útil, dale una estrella en GitHub y compártelo.**
+ **Si este proyecto te fue útil, dale una estrella en GitHub y compártelo.**
 
 *© 2026 — Sistema de Gestión de Asistencias para MOTO-CARS INVERSIONES*
 

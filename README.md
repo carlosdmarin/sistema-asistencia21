@@ -239,7 +239,7 @@ CREATE TABLE JUSTIFICACION (
 );
 ```
 ### Diagramas
-| Dashboard | Asistencia con Lector |
+| Diagrama MER | Asistencia con Lector |
 |:---------:|:---------------------:|
 | ![MER](recursos/imagenes/DIAGRAMA_DB.png) | ![Lector](recursos/imagenes/lector.png) |
 

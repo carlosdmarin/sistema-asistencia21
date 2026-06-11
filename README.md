@@ -239,7 +239,8 @@ CREATE TABLE JUSTIFICACION (
 );
 ```
 ### Diagrama MER
-![Diagrama](recursos/imagenes/.png)
+![Diagrama](recursos/imagenes/DIAGRAMA_DB.png)
+--- 
 ### Cardinalidades
 
 | Relación | Tipo | Explicación |

@@ -1,7 +1,7 @@
 # SISTEMA DE REGISTROS DE EMPLEADOS Y ASISTENCIAS
 
 ## Descripcion del negocio
-### Nombre: (Buscando empresa...)
+### Nombre: MOTO - CARS INVERSIONES
 
 ### Giro: 
 Software de gestión de recursos humanos para pequeñas y medianas empresas (pymes), restaurantes, tiendas, consultorías y equipos remotos.

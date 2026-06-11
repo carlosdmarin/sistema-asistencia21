@@ -1,11 +1,62 @@
-#  Sistema de Gestión de Asistencias
-### MOTO-CARS INVERSIONES
+
+<div align="center">
+
+# 🚀 SISTEMA DE GESTIÓN DE ASISTENCIAS - MOTO-CARS INVERSIONES
 
 ![PHP](https://img.shields.io/badge/PHP-8.2-4F5B93?style=for-the-badge&logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-00758F?style=for-the-badge&logo=mysql&logoColor=white)
 ![Apache](https://img.shields.io/badge/Apache-2.4-D22128?style=for-the-badge&logo=apache&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/Licencia-MIT-22C55E?style=for-the-badge)
+
+</div>
+
+<div align="center">
+
+### ⚙️ Backend & Base de Datos
+
+![Database](https://img.shields.io/badge/Base%20de%20Datos-MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+![MVC](https://img.shields.io/badge/Arquitectura-MVC-8B5CF6?style=for-the-badge)
+![POO](https://img.shields.io/badge/Paradigma-POO-EC4899?style-for-the-badge)
+![CRON](https://img.shields.io/badge/Automatización-CRON-22C55E?style=for-the-badge)
+
+### 🎨 Frontend
+
+![AJAX](https://img.shields.io/badge/AJAX-En%20vivo-06B6D4?style=for-the-badge)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+
+### 🛠️ Herramientas de Desarrollo
+
+![Visual Studio Code](https://img.shields.io/badge/VS%20Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)
+![XAMPP](https://img.shields.io/badge/XAMPP-8.2-FB7A24?style=for-the-badge&logo=xampp&logoColor=white)
+![Git](https://img.shields.io/badge/Git-2.4-F05032?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+
+### 📋 Gestión del Proyecto
+
+![Trello](https://img.shields.io/badge/Trello-0052CC?style=for-the-badge&logo=trello&logoColor=white)
+![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
+![Draw.io](https://img.shields.io/badge/Draw.io-F08705?style=for-the-badge&logo=diagramsdotnet&logoColor=white)
+
+### 🔐 Seguridad
+
+![Security](https://img.shields.io/badge/Seguridad-Prepared%20Statements-22C55E?style=for-the-badge)
+![Encryption](https://img.shields.io/badge/Contraseñas-Bcrypt-22C55E?style=for-the-badge)
+
+### 📊 Métricas del Proyecto
+
+![GitHub followers](https://img.shields.io/github/followers/carlosdmarin?style=for-the-badge&logo=github&color=181717)
+![GitHub stars](https://img.shields.io/github/stars/carlosdmarin/SISTEMA-ASISTENCIA?style=for-the-badge&logo=github&color=FFD700)
+![GitHub forks](https://img.shields.io/github/forks/carlosdmarin/SISTEMA-ASISTENCIA?style=for-the-badge&logo=github&color=4F5B93)
+
+### 👤 Autor
+
+![Autor](https://img.shields.io/badge/Autor-Carlos%20Marín-22C55E?style=for-the-badge)
+![Fecha](https://img.shields.io/badge/Fecha-2026-FFD700?style=for-the-badge)
+![Sistema de Asistencias](https://img.shields.io/badge/Sistema%20de%20Asistencias-1.0.0-4F5B93?style=for-the-badge)
+
+</div>
 
 ---
 

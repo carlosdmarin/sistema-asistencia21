@@ -285,7 +285,7 @@ Este proyecto se gestionó con **metodología ágil** usando Trello y se diseñ�
 | Herramienta | Enlace |
 |-------------|--------|
 | 📋 Tablero Trello | [Ver tablero](https://trello.com/b/YEKBDLXE/sistema-asistencia) |
-| 🎨 Prototipo Figma | [Ver diseño](#) *(reemplaza con tu enlace)* |
+| 🎨 Prototipo Figma | [Ver diseño](https://www.figma.com/design/VoClaSs4Tfc3ZZ3iVfCmuU/PROYECTO-ASISTENCIA?node-id=41-1559&t=BYIrH7qSuvFSXNrC-0) |
 
 ---
 

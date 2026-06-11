@@ -260,7 +260,6 @@ CREATE TABLE JUSTIFICACION (
 |:--------------:|:----------------------:|
 | ![Reporte](recursos/imagenes/reporte_mensual.png) | ![Ranking](recursos/imagenes/ranking.png) |
 
-> 📁 Agrega tus capturas en la carpeta `recursos/imagenes/`
 
 ---
 

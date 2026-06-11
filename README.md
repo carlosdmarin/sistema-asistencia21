@@ -26,6 +26,7 @@
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![DaisyUI](https://img.shields.io/badge/DaisyUI-4.12-5A0EF8?style=for-the-badge&logo=daisyui&logoColor=white)
+![SweetAlert2](https://img.shields.io/badge/SweetAlert2-11.0-6B46C1?style=for-the-badge&logo=javascript&logoColor=white)
 
 ### 🛠️ Herramientas de Desarrollo
 

@@ -1,7 +1,7 @@
 
 <div align="center">
 
-# 🚀 SISTEMA DE GESTIÓN DE ASISTENCIAS - MOTO-CARS INVERSIONES
+#  SISTEMA DE GESTIÓN DE ASISTENCIAS - MOTO-CARS INVERSIONES
 
 ![PHP](https://img.shields.io/badge/PHP-8.2-4F5B93?style=for-the-badge&logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-00758F?style=for-the-badge&logo=mysql&logoColor=white)

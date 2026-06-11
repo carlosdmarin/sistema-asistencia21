@@ -3,6 +3,7 @@
 class ReporteController extends Controller
 {
     private $reporteModel;
+    public $Reporte;
 
     public function __construct()
     {

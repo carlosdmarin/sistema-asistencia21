@@ -25,8 +25,12 @@
 ![AJAX](https://img.shields.io/badge/AJAX-En%20vivo-06B6D4?style=for-the-badge)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 ![DaisyUI](https://img.shields.io/badge/DaisyUI-4.12-5A0EF8?style=for-the-badge&logo=daisyui&logoColor=white)
 ![SweetAlert2](https://img.shields.io/badge/SweetAlert2-11.0-6B46C1?style=for-the-badge&logo=javascript&logoColor=white)
+![FontAwesome](https://img.shields.io/badge/FontAwesome-6.5-528DD7?style=for-the-badge&logo=fontawesome&logoColor=white)
+![Google Fonts](https://img.shields.io/badge/Google%20Fonts-Poppins-4285F4?style=for-the-badge&logo=googlefonts&logoColor=white)
+
 
 ### 🛠️ Herramientas de Desarrollo
 

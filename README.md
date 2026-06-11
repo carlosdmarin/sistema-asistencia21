@@ -92,16 +92,16 @@ Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES*
 
 | Módulo | Descripción |
 |--------|-------------|
-| 🔐 **Autenticación** | Login seguro con contraseñas encriptadas (`password_hash`) |
-| 👥 **Empleados** | CRUD completo: registrar, editar, eliminar y buscar por nombre o DNI |
-| 💼 **Cargos** | Gestión de puestos laborales (vendedor, mecánico, administrativo) |
-| ⏰ **Turnos** | Configuración de horarios con entrada, salida y tolerancia de tardanza |
-| 📅 **Asistencia con Lector** | Marcación con DNI mediante lector de código de barras y detección automática de tardanza |
-| 📋 **Historial** | Consulta de asistencias pasadas por fecha específica |
-| ✏️ **Justificaciones** | El administrador puede justificar faltas con motivo y queda registro permanente |
-| 📊 **Reportes** | Exportación a Excel y PDF: asistencia por fecha, resumen mensual y ranking de puntualidad |
-| 🤖 **Automatización (CRON)** | Marca faltas y salidas automáticamente según el horario de cada turno |
-| 🖥️ **Dashboard** | Estadísticas en tiempo real, gráficos y últimos registros (actualización AJAX cada 30 seg) |
+|  **Autenticación** | Login seguro con contraseñas encriptadas (`password_hash`) |
+|  **Empleados** | CRUD completo: registrar, editar, eliminar y buscar por nombre o DNI |
+|  **Cargos** | Gestión de puestos laborales (vendedor, mecánico, administrativo) |
+|  **Turnos** | Configuración de horarios con entrada, salida y tolerancia de tardanza |
+|  **Asistencia con Lector** | Marcación con DNI mediante lector de código de barras y detección automática de tardanza |
+|  **Historial** | Consulta de asistencias pasadas por fecha específica |
+|  **Justificaciones** | El administrador puede justificar faltas con motivo y queda registro permanente |
+|  **Reportes** | Exportación a Excel y PDF: asistencia por fecha, resumen mensual y ranking de puntualidad |
+|  **Automatización (CRON)** | Marca faltas y salidas automáticamente según el horario de cada turno |
+|  **Dashboard** | Estadísticas en tiempo real, gráficos y últimos registros (actualización AJAX cada 30 seg) |
 
 ---
 

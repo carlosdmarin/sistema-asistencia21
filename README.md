@@ -238,12 +238,13 @@ CREATE TABLE JUSTIFICACION (
     FOREIGN KEY (id_asistencia) REFERENCES ASISTENCIA(id_asistencia) ON DELETE CASCADE
 );
 ```
+--- 
 ### Diagramas
 | Diagrama MER | Asistencia con Lector |
 |:---------:|:---------------------:|
 | ![MER](recursos/imagenes/DIAGRAMA_DB.png) | ![Lector](recursos/imagenes/lector.png) |
-
 --- 
+
 ### Cardinalidades
 
 | Relación | Tipo | Explicación |

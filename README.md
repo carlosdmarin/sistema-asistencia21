@@ -1,4 +1,4 @@
-# 🚀 Sistema de Gestión de Asistencias
+#  Sistema de Gestión de Asistencias
 ### MOTO-CARS INVERSIONES
 
 ![PHP](https://img.shields.io/badge/PHP-8.2-4F5B93?style=for-the-badge&logo=php&logoColor=white)
@@ -9,7 +9,7 @@
 
 ---
 
-## 📌 Sobre el Proyecto
+##  Sobre el Proyecto
 
 Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES**, empresa dedicada a la venta de motos lineales y motokares de la marca Honda. Gestiona a sus **20 empleados** entre vendedores, mecánicos, administrativos y personal de limpieza.
 

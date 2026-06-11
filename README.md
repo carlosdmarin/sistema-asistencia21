@@ -238,7 +238,8 @@ CREATE TABLE JUSTIFICACION (
     FOREIGN KEY (id_asistencia) REFERENCES ASISTENCIA(id_asistencia) ON DELETE CASCADE
 );
 ```
-
+### Diagrama MER
+![Diagrama](recursos/imagenes/.png)
 ### Cardinalidades
 
 | Relación | Tipo | Explicación |

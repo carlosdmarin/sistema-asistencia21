@@ -73,3 +73,26 @@
 ---
 
 ## 🧱 Arquitectura MVC
+┌─────────────────────────────────────────────────────────────────┐
+│ SISTEMA MVC │
+├─────────────────────────────────────────────────────────────────┤
+│ │
+│ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │
+│ │ MODELO │◄───►│ CONTROLADOR │◄───►│ VISTA │ │
+│ │ (Base de │ │ (Lógica) │ │ (HTML) │ │
+│ │ Datos) │ │ │ │ │ │
+│ └─────────────┘ └─────────────┘ └─────────────┘ │
+│ ▲ ▲ ▲ │
+│ │ │ │ │
+│ ▼ ▼ ▼ │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ FLUJO DE PETICIÓN │ │
+│ │ 1. Usuario escribe URL │ │
+│ │ 2. .htaccess redirige a index.php │ │
+│ │ 3. Router determina qué controlador ejecutar │ │
+│ │ 4. Controlador llama al modelo (consulta BD) │ │
+│ │ 5. Controlador carga la vista con los datos │ │
+│ │ 6. Se muestra HTML al usuario │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│ │
+└─────────────────────────────────────────────────────────────────┘

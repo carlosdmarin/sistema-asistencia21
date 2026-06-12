@@ -1,21 +1,80 @@
-# 🚀 Sistema de Gestión de Asistencias
-### MOTO-CARS INVERSIONES
 
+<div align="center">
+
+#  SISTEMA DE GESTIÓN DE ASISTENCIAS - MOTO-CARS INVERSIONES
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 ![PHP](https://img.shields.io/badge/PHP-8.2-4F5B93?style=for-the-badge&logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-00758F?style=for-the-badge&logo=mysql&logoColor=white)
 ![Apache](https://img.shields.io/badge/Apache-2.4-D22128?style=for-the-badge&logo=apache&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/Licencia-MIT-22C55E?style=for-the-badge)
 
+</div>
+
+<div align="center">
+
+###  Backend & Base de Datos
+
+![Database](https://img.shields.io/badge/Base%20de%20Datos-MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+![MVC](https://img.shields.io/badge/Arquitectura-MVC-8B5CF6?style=for-the-badge)
+![POO](https://img.shields.io/badge/Paradigma-POO-EC4899?style-for-the-badge)
+![CRON](https://img.shields.io/badge/Automatización-CRON-22C55E?style=for-the-badge)
+
+### Frontend
+
+![AJAX](https://img.shields.io/badge/AJAX-En%20vivo-06B6D4?style=for-the-badge)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![DaisyUI](https://img.shields.io/badge/DaisyUI-4.12-5A0EF8?style=for-the-badge&logo=daisyui&logoColor=white)
+![SweetAlert2](https://img.shields.io/badge/SweetAlert2-11.0-6B46C1?style=for-the-badge&logo=javascript&logoColor=white)
+![FontAwesome](https://img.shields.io/badge/FontAwesome-6.5-528DD7?style=for-the-badge&logo=fontawesome&logoColor=white)
+![Google Fonts](https://img.shields.io/badge/Google%20Fonts-Poppins-4285F4?style=for-the-badge&logo=googlefonts&logoColor=white)
+[![Uiverse](https://img.shields.io/badge/Uiverse-UI%20Components-6C63FF?style=for-the-badge)](https://uiverse.io/)
+
+
+
+### Herramientas de Desarrollo
+
+![Visual Studio Code](https://img.shields.io/badge/VS%20Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)
+![XAMPP](https://img.shields.io/badge/XAMPP-8.2-FB7A24?style=for-the-badge&logo=xampp&logoColor=white)
+![Git](https://img.shields.io/badge/Git-2.4-F05032?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+
+###  Gestión del Proyecto
+
+![Trello](https://img.shields.io/badge/Trello-0052CC?style=for-the-badge&logo=trello&logoColor=white)
+![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
+![Draw.io](https://img.shields.io/badge/Draw.io-F08705?style=for-the-badge&logo=diagramsdotnet&logoColor=white)
+
+###  Seguridad
+
+![Security](https://img.shields.io/badge/Seguridad-Prepared%20Statements-22C55E?style=for-the-badge)
+![Encryption](https://img.shields.io/badge/Contraseñas-Bcrypt-22C55E?style=for-the-badge)
+
+###  Métricas del Proyecto
+
+![GitHub followers](https://img.shields.io/github/followers/carlosdmarin?style=for-the-badge&logo=github&color=181717)
+![GitHub stars](https://img.shields.io/github/stars/carlosdmarin/SISTEMA-ASISTENCIA?style=for-the-badge&logo=github&color=FFD700)
+![GitHub forks](https://img.shields.io/github/forks/carlosdmarin/SISTEMA-ASISTENCIA?style=for-the-badge&logo=github&color=4F5B93)
+
+###  Autor
+
+![Autor](https://img.shields.io/badge/Autor-Carlos%20Marín-22C55E?style=for-the-badge)
+![Fecha](https://img.shields.io/badge/Fecha-2026-FFD700?style=for-the-badge)
+![Sistema de Asistencias](https://img.shields.io/badge/Sistema%20de%20Asistencias-1.0.0-4F5B93?style=for-the-badge)
+
+</div>
+
 ---
 
-## 📌 Sobre el Proyecto
+##  Sobre el Proyecto
 
 Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES**, empresa dedicada a la venta de motos lineales y motokares de la marca Honda. Gestiona a sus **20 empleados** entre vendedores, mecánicos, administrativos y personal de limpieza.
 
 ---
 
-## 🚨 El Problema
+##  El Problema
 
 | # | Problema | Consecuencia |
 |---|----------|--------------|
@@ -26,29 +85,29 @@ Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES*
 | 5 | Sin justificaciones | No quedaba registro de faltas por motivos de salud |
 | 6 | Reportes manuales | Generarlos tomaba horas y siempre tenían errores |
 
-> 💬 *"Un sistema sencillo donde los empleados marquen su entrada y salida con su DNI, que me avise quién llega tarde, que me calcule las faltas solo, y que me genere reportes sin que yo tenga que hacer cuentas a mano."*
+>  *"Un sistema sencillo donde los empleados marquen su entrada y salida con su DNI, que me avise quién llega tarde, que me calcule las faltas solo, y que me genere reportes sin que yo tenga que hacer cuentas a mano."*
 > — Dueño de MOTO-CARS INVERSIONES
 
 ---
 
-## ✅ La Solución
+##  La Solución
 
 | Módulo | Descripción |
 |--------|-------------|
-| 🔐 **Autenticación** | Login seguro con contraseñas encriptadas (`password_hash`) |
-| 👥 **Empleados** | CRUD completo: registrar, editar, eliminar y buscar por nombre o DNI |
-| 💼 **Cargos** | Gestión de puestos laborales (vendedor, mecánico, administrativo) |
-| ⏰ **Turnos** | Configuración de horarios con entrada, salida y tolerancia de tardanza |
-| 📅 **Asistencia con Lector** | Marcación con DNI mediante lector de código de barras y detección automática de tardanza |
-| 📋 **Historial** | Consulta de asistencias pasadas por fecha específica |
-| ✏️ **Justificaciones** | El administrador puede justificar faltas con motivo y queda registro permanente |
-| 📊 **Reportes** | Exportación a Excel y PDF: asistencia por fecha, resumen mensual y ranking de puntualidad |
-| 🤖 **Automatización (CRON)** | Marca faltas y salidas automáticamente según el horario de cada turno |
-| 🖥️ **Dashboard** | Estadísticas en tiempo real, gráficos y últimos registros (actualización AJAX cada 30 seg) |
+|  **Autenticación** | Login seguro con contraseñas encriptadas (`password_hash`) |
+|  **Empleados** | CRUD completo: registrar, editar, eliminar y buscar por nombre o DNI |
+|  **Cargos** | Gestión de puestos laborales (vendedor, mecánico, administrativo) |
+|  **Turnos** | Configuración de horarios con entrada, salida y tolerancia de tardanza |
+|  **Asistencia con Lector** | Marcación con DNI mediante lector de código de barras y detección automática de tardanza |
+|  **Historial** | Consulta de asistencias pasadas por fecha específica |
+|  **Justificaciones** | El administrador puede justificar faltas con motivo y queda registro permanente |
+|  **Reportes** | Exportación a Excel y PDF: asistencia por fecha, resumen mensual y ranking de puntualidad |
+|  **Automatización (CRON)** | Marca faltas y salidas automáticamente según el horario de cada turno |
+|  **Dashboard** | Estadísticas en tiempo real, gráficos y últimos registros (actualización AJAX cada 30 seg) |
 
 ---
 
-## 🛠️ Stack Tecnológico
+##  Stack Tecnológico
 
 | Herramienta | Versión | Uso |
 |-------------|---------|-----|
@@ -67,7 +126,7 @@ Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES*
 
 ---
 
-## 🧱 Arquitectura MVC
+##  Arquitectura MVC
 
 El sistema sigue el patrón **Modelo – Vista – Controlador** implementado desde cero en PHP puro, sin frameworks.
 
@@ -100,7 +159,7 @@ SISTEMA-ASISTENCIA/
 
 ---
 
-## ⚙️ Instalación
+##  Instalación
 
 ### Requisitos previos
 
@@ -140,20 +199,20 @@ DB_PASS=
 http://localhost/SISTEMA-ASISTENCIA
 ```
 
-> 🔑 **Credenciales por defecto:** usuario `admin` / contraseña `admin123`
+>  **Credenciales por defecto:** usuario `admin` / contraseña `admin123`
 
 ---
 
-### ⏱️ Configuración del CRON (Tareas Automáticas)
+###  Configuración del CRON (Tareas Automáticas)
 
-**🍎 Mac / Linux**
+** Mac / Linux**
 ```bash
 crontab -e
 # Agregar la siguiente línea (ejecuta todos los días a las 6:00 PM):
 0 18 * * * /Applications/XAMPP/bin/php /ruta/a/SISTEMA-ASISTENCIA/cron_asistencia.php
 ```
 
-**🪟 Windows (Programador de tareas)**
+** Windows (Programador de tareas)**
 ```
 Abrir: taskschd.msc → Crear tarea básica
   - Nombre:      Sistema Asistencias
@@ -164,7 +223,7 @@ Abrir: taskschd.msc → Crear tarea básica
 
 ---
 
-## 📊 Base de Datos
+##  Base de Datos
 
 ### Script SQL
 
@@ -238,12 +297,13 @@ CREATE TABLE JUSTIFICACION (
     FOREIGN KEY (id_asistencia) REFERENCES ASISTENCIA(id_asistencia) ON DELETE CASCADE
 );
 ```
+--- 
 ### Diagramas
 | Diagrama MER | Asistencia con Lector |
 |:---------:|:---------------------:|
 | ![MER](recursos/imagenes/DIAGRAMA_DB.png) | ![Lector](recursos/imagenes/lector.png) |
-
 --- 
+
 ### Cardinalidades
 
 | Relación | Tipo | Explicación |
@@ -255,7 +315,7 @@ CREATE TABLE JUSTIFICACION (
 
 ---
 
-## 📸 Capturas de Pantalla
+##  Capturas de Pantalla
 
 | Dashboard | Asistencia con Lector |
 |:---------:|:---------------------:|
@@ -268,9 +328,9 @@ CREATE TABLE JUSTIFICACION (
 
 ---
 
-## 📈 Logros del Proyecto
+##  Logros del Proyecto
 
-| ✅ Logro | Descripción |
+|  Logro | Descripción |
 |---------|-------------|
 | **100% funcional** | Todos los módulos están operativos |
 | **MVC desde cero** | Sin frameworks: código limpio, ordenado y escalable |
@@ -283,46 +343,48 @@ CREATE TABLE JUSTIFICACION (
 
 ---
 
-## 🗂️ Gestión del Proyecto
+##  Gestión del Proyecto
 
 Este proyecto se gestionó con **metodología ágil** usando Trello y se diseñó con un prototipo en Figma antes de implementar.
 
 | Herramienta | Enlace |
 |-------------|--------|
-| 📋 Tablero Trello | [Ver tablero](https://trello.com/b/YEKBDLXE/sistema-asistencia) |
-| 🎨 Prototipo Figma | [Ver diseño](https://www.figma.com/design/VoClaSs4Tfc3ZZ3iVfCmuU/PROYECTO-ASISTENCIA?node-id=41-1559&t=BYIrH7qSuvFSXNrC-0) |
+|  Tablero Trello | [Ver tablero](https://trello.com/b/YEKBDLXE/sistema-asistencia) |
+|  Prototipo Figma | [Ver diseño](https://www.figma.com/design/VoClaSs4Tfc3ZZ3iVfCmuU/PROYECTO-ASISTENCIA?node-id=41-1559&t=BYIrH7qSuvFSXNrC-0) |
 
 ---
 
-## 👥 Autores
+##  Autores
 
 | Nombre | Rol | Contacto |
 |--------|-----|----------|
 | **Carlos Marín** | Desarrollo completo | [GitHub](https://github.com/carlosdmarin) |
-| **MOTO-CARS INVERSIONES** | Cliente / Caso de estudio | — |
+| **MOTO-CARS INVERSIONES** | Cliente / Caso de estudio | 931297608 |
 
 ---
 
-## 📄 Licencia
+##  Licencia
 
 Este proyecto está bajo la licencia **MIT**.
 Puedes usarlo, modificarlo y distribuirlo libremente.
 
 ---
 
-## 📬 Contacto
+##  Contacto
 
 | Medio | Enlace |
 |-------|--------|
-| 📩 Email | carlosdmarin@email.com |
-| 🔗 GitHub | [github.com/carlosdmarin](https://github.com/carlosdmarin) |
-| 💼 LinkedIn | [linkedin.com/in/carlosdmarin](https://linkedin.com/in/carlosdmarin) |
+|  Email | carlosdmarin@email.com |
+|  GitHub | [github.com/carlosdmarin](https://github.com/carlosdmarin) |
+|  LinkedIn | [linkedin.com/in/carlosdmarin](https://linkedin.com/in/carlosdmarin) |
 
 ---
+## License
 
+This project is licensed under the MIT License - see the LICENSE file for details.
 <div align="center">
 
-⭐ **Si este proyecto te fue útil, dale una estrella en GitHub y compártelo.**
+ **Si este proyecto te fue útil, dale una estrella en GitHub y compártelo.**
 
 *© 2026 — Sistema de Gestión de Asistencias para MOTO-CARS INVERSIONES*
 

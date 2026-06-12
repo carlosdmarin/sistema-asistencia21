@@ -377,11 +377,6 @@ Puedes usarlo, modificarlo y distribuirlo libremente.
 |  LinkedIn | [linkedin.com/in/carlosdmarin](https://linkedin.com/in/carlosdmarin) |
 
 ---
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-<div align="center">
-
  **Si este proyecto te fue útil, dale una estrella en GitHub y compártelo.**
 
 *© 2026 — Sistema de Gestión de Asistencias para MOTO-CARS INVERSIONES*

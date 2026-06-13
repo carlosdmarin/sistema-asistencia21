@@ -297,9 +297,9 @@ CREATE TABLE JUSTIFICACION (
 ```
 --- 
 ### Fotos del Negocio
-| Diagrama MER | Asistencia con Lector |
+| Dashboard |  Lector |
 |:---------:|:---------------------:|
-| ![MER](recursos/imagenes/DIAGRAMA_DB.png) | ![Lector](recursos/imagenes/lector.png) |
+| ![MER](recursos/imagenes/IMG_3463.jpg) | ![Lector](recursos/imagenes/lector.png) |
 --- 
 
 ### Diagramas

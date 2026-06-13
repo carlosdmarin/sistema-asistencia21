@@ -68,7 +68,7 @@
 
 ##  Sobre el Proyecto
 
-Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES**, empresa dedicada a la venta de motos lineales y motokares de la marca Honda. Gestiona a sus **20 empleados** entre vendedores, mecánicos, administrativos y personal de limpieza.
+Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES**, empresa dedicada a la venta de motos lineales y motokares de la marca Honda. Gestiona a sus **4 empleados** entre acesores de ventas, mecánicos, administrativos, etc.
 
 ---
 
@@ -78,7 +78,7 @@ Sistema web de control de asistencias desarrollado para **MOTO-CARS INVERSIONES*
 |---|----------|--------------|
 | 1 | Registros manuales en papel | Errores y posibles falsificaciones |
 | 2 | Sin control en tiempo real | El administrador no sabía quién llegó tarde o faltó |
-| 3 | Cálculo laborioso | El dueño perdía horas sumando tardanzas y horas extras |
+| 3 | Cálculo laborioso | El dueño perdía horas sumando tardanzas|
 | 4 | Pérdida de información | Las hojas se extraviaban o dañaban |
 | 5 | Sin justificaciones | No quedaba registro de faltas por motivos de salud |
 | 6 | Reportes manuales | Generarlos tomaba horas y siempre tenían errores |

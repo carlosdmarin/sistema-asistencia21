@@ -300,7 +300,7 @@ CREATE TABLE JUSTIFICACION (
 | Dashboard |  Lector |
 |:---------:|:---------------------:|
 | ![MER](recursos/imagenes/IMG_3463.jpg) | ![Lector](recursos/imagenes/IMG_3464.jpg) | 
-| ![MER](recursos/imagenes/IMG_3463.jpg) | ![MER](recursos/imagenes/IMG_3463.jpg)
+| ![MER](recursos/imagenes/IMG_3463.jpg) | ![MER](recursos/imagenes/CARNET.png)
 --- 
 
 ### Diagramas

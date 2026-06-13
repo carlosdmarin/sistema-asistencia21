@@ -296,10 +296,11 @@ CREATE TABLE JUSTIFICACION (
 );
 ```
 --- 
-### Fotos del Negocio
+### Fotos de la empresa
 | Dashboard |  Lector |
 |:---------:|:---------------------:|
 | ![MER](recursos/imagenes/IMG_3463.jpg) | ![Lector](recursos/imagenes/IMG_3464.jpg) | 
+| Empresa | Cedula de empleados  |
 | ![MER](recursos/imagenes/IMG_3432.jpg) | ![MER](recursos/imagenes/CARNET.png)
 --- 
 

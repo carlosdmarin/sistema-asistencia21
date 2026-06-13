@@ -299,7 +299,7 @@ CREATE TABLE JUSTIFICACION (
 ### Fotos del Negocio
 | Dashboard |  Lector |
 |:---------:|:---------------------:|
-| ![MER](recursos/imagenes/IMG_3463.jpg) | ![Lector](recursos/imagenes/lector.png) |
+| ![MER](recursos/imagenes/IMG_3463.jpg) | ![Lector](recursos/imagenes/IMG_3464.jpg) |
 --- 
 
 ### Diagramas
